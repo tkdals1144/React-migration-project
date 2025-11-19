@@ -1,0 +1,44 @@
+@import url('https://fonts.googleapis.com/css2?family=Faculty+Glyphic&family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap');
+
+* {
+    font-family: "Open Sans", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 500;
+    font-style: normal;
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+ul {
+  list-style: none;
+}
+
+a {
+  text-decoration: none;
+  all: unset;
+  cursor:pointer;
+}
+
+input {
+  border: none;
+}
+
+input:focus {
+  outline: none;
+}
+
+textarea {
+  border: none;
+  resize: none;
+  word-wrap: break-word; /* 긴 단어가 넘칠 때 줄바꿈 */
+  white-space: pre-wrap; /* 공백 문자 포함 줄바꿈 */
+}
+
+textarea:focus {
+  outline: none;
+}
+
+select:focus {
+  outline: none;
+}

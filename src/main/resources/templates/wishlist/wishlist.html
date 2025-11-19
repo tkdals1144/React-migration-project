@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wishlist</title>
+    <link rel="stylesheet" th:href="@{/css/mylist.css}">
+    <link rel="stylesheet" th:href="@{/css/font.css}">
+    <link rel="stylesheet" th:href="@{/css/header.css}">
+    <script defer th:src="@{/js/header.js}"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <th:block th:insert="fragments/footerhead :: head"></th:block>
+</head>
+<body>
+<th:block th:replace="fragments/header1 :: header"></th:block>
+<main>
+    <div id="wrap_wrap2">
+        <p class="title">위시리스트</p>
+        <hr>
+        <ul class="list_wrap">
+            <li class="list" th:each="item : ${wishlist}" th:data-product-id="${item.productId}">
+                <div class="close_wrap" th:onclick="deleteItem(this)">
+                    <img th:src="@{/img/close.svg}" alt="" class="close">
+                </div>
+                <p class="price" th:text="'￦' + ${#numbers.formatInteger(item.currentPrice, 0, 'COMMA')}"></p>
+                <div class="img_wrap">
+                    <img th:src="${item.imageUrl}" alt="" class="img">
+                </div>
+                <div class="info_box">
+                    <a th:href="@{/brand/{brandName}(brandName = ${item.brandName})}">
+                        <p th:text="${item.brandName}"></p>
+                    </a>
+                    <a th:href="@{/product/{productId}(productId = ${item.productId})}">
+                        <p class="info_title" th:text="${item.name}"></p>
+                    </a>
+                    <ul class="info_wrap">
+                        <li class="info">
+                            <span th:if="${item.originalPrice != null}" th:text="'￦' + ${#numbers.formatInteger(item.originalPrice, 0, 'COMMA')}"></span>
+                            <b class="small" th:if="${item.originalPrice != null}" th:text="원래가격"></b>
+                        </li>
+                    </ul>
+                </div>
+            </li>
+        </ul>
+    </div>
+    <script>
+        function deleteItem(element){
+            let item = element.closest(".list");
+            let productId = item.dataset.productId;
+
+            $.ajax({
+                url: "/wishlist/delete/" + productId,
+                type: "DELETE",
+                success: function(response){
+                    alert(response.message);
+                    if(response.status === "delete_success"){
+                        if(item){
+                            item.remove();
+                            if(size === 0){
+                            let size = Number(response.wishlistSize);
+                                $("#wishlist_small_icon").removeClass("active");
+                            } else{
+                                $("#wishlist_size").text(size);
+                            }
+                        }
+                    }
+                },
+                error: function(xhr, status, error){
+                    console.log("Error:", error);
+                }
+            });
+        }
+    </script>
+</main>
+<th:block th:replace="fragments/footer :: footer"></th:block>
+</body>
+</html>

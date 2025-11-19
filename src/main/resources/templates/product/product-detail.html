@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product</title>
+    <link rel="stylesheet" th:href="@{/css/header.css}">
+    <link rel="stylesheet" th:href="@{/css/font.css}">
+    <link rel="stylesheet" th:href="@{/css/product-detail.css}">
+    <script defer th:src="@{/js/product-detail.js}"></script>
+    <script defer th:src="@{/js/header.js}"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <th:block th:insert="fragments/footerhead :: head"></th:block>
+</head>
+<body>
+<th:block th:replace="fragments/header1 :: header"></th:block>
+<main>
+    <div id="product_img_wrap">
+        <img th:src="${product.image_url}" alt="Product Image" id="product_img">
+    </div>
+    <div id="product_info_wrap">
+        <p id="product_brand" th:text="${product.brand}">Brand</p>
+        <p id="product_name" th:text="${product.name}">Product Name</p>
+        <p id="product_price" th:text="'₩' + ${#numbers.formatInteger(product.current_price, 3, 'COMMA')}">Current Price</p>
+        <p id="product_sales" th:if="${product.original_price > product.current_price}">
+            <b th:text="'₩' + ${#numbers.formatInteger(product.original_price, 3, 'COMMA')}">Original Price</b>
+            <span th:text="'(' + ${discountRate} + '% 할인)'">Discount Rate</span>
+        </p>
+
+
+
+        <ul id="product_category">
+            <li class="category_list" th:text="${product.category1}">category1</li>
+            <li class="category_list" th:text="${product.category2}">category2</li>
+            <li class="category_list"  th:if="${product.category3 != null}" th:text="${product.category3}">category3</li>
+        </ul>
+        <ul id="product_point">
+            <li class="point_list" th:text="${product.description}">Product Description>Style: 6211 Wild Leather Belt</li>
+
+        </ul>
+
+
+<!--       ajax 구현부 -->
+        <div id="product-info" data-code="${product.code}" data-userid="${userid}"></div>
+
+        <div id="wishlist_btn" class="btn" th:data-product-id="${product.product_id}">
+            <p id="wishlist_txt">위시리스트에 추가</p>
+            <img th:src="@{/img/product_wishlist.svg}" alt="" id="wishlist_img">
+        </div>
+        <div id="bucket_btn" class="btn" th:data-product-id="${product.product_id}">
+            <p id="bucket_txt">장바구니에 담기</p>
+            <img src="/img/product_bucket.svg" alt="" id="bucket_img">
+        </div>
+    </div>
+</main>
+<th:block th:replace="fragments/footer :: footer"></th:block>
+</body>
+</html>

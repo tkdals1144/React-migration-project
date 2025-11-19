@@ -1,0 +1,262 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+header {
+    background-color: rgb(0, 0, 0);
+    display: flex;
+    position: sticky;
+    width: 100%;
+    top: 0;
+    z-index: 800;
+}
+
+#logo_wrap {
+    padding: 24px 36px;
+    cursor: pointer;
+}
+
+#logo {
+    color: white;
+    font-weight: bold;
+    font-size: 48px;
+}
+
+#wrap_wrap {
+    width: 100%;
+}
+
+#wrap1 {
+    display: flex;
+    justify-content: space-between;
+    position: relative;
+    width: 100%;
+    margin: 18px 0;
+}
+
+#header_input_wrap {
+    width: 64%;
+    position: relative;
+    left: 60px;
+}
+
+#header_input {
+    padding: 12px 16px;
+    width: 100%;
+}
+
+#header_search {
+    position: absolute;
+    top: 5px;
+    right: 0px;
+    width: 52px;
+    height: 32px;
+    cursor: pointer;
+    padding: 4px;
+}
+
+#header_icon_wrap {
+    display: flex;
+    flex-wrap: wrap;
+    width: 200px;
+    position: absolute;
+    right: 36px;
+    z-index: 100;
+}
+
+.header_icon {
+    flex: 1;
+    cursor: pointer;
+    width: 40px;
+    height: 40px;
+    padding: 4px;
+    background-color: rgba(250, 235, 215, 0);
+    transition: background-color 0.5s ease;
+    border-radius: 10px;
+    z-index: 99;
+}
+
+.small_icon_wrap {
+    position: relative;
+    z-index: 90;
+}
+
+#wishlist_small_icon{
+    display: none;
+}
+
+#wishlist_small_icon.active{
+    display: block;
+}
+
+#alarm_small_icon{
+    display: none;
+}
+
+#alarm_small_icon.active{
+    display: block;
+}
+
+.small_icon {
+    position: absolute;
+    left: 24px;
+    top: 0px;
+    width: 24px;
+    height: 24px;
+}
+
+.small_txt {
+    position: absolute;
+    color: white;
+    left: 28px;
+    background-color: red;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    text-align: center;
+    font-size: 12px;
+    line-height: 20px;
+}
+
+.header_icon:hover {
+    background-color: rgba(250, 235, 215, 0.4);
+}
+
+#header_alarm_dropdown, #header_profile_dropdown, #header_profile_dropdown2{
+    position: absolute;
+    display: none;
+    background-color: white;
+    top: 40px;
+    border: 1px solid rgba(148, 147, 147, 1);
+    z-index: 1000;
+    z-index: 200;
+}
+
+#header_alarm_dropdown.active, #header_profile_dropdown.active, #header_profile_dropdown2.active {
+    display: block;
+}
+
+#header_alarm_dropdown {
+    width: 330px;
+    right: 110px;
+    padding: 5px;
+}
+
+#header_profile_dropdown, #header_profile_dropdown2 {
+    width: 120px;
+    text-align: center;
+    right: -30px;
+}
+
+.header_profile_dropdown_list {
+    padding: 10px;
+    cursor: pointer;
+}
+
+.header_profile_dropdown_list:hover {
+    background-color: antiquewhite;
+}
+
+#wrap2 {
+    width: 100%;
+}
+
+#header_nav {
+    display: flex;
+    background-color: black;
+    align-items: stretch;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    width: 70%;
+    height: 35px;
+}
+
+.header_list {
+    cursor: pointer;
+    color: white;
+    flex: 1;
+    text-align: center;
+    padding-top: 5px;
+}
+
+.header_list:hover {
+    background-color: white;
+    color: black;
+}
+
+@media (max-width: 840px) {
+    #header_input_wrap {
+        display: none;
+    }
+
+    #wrap2 {
+        margin-top: 60px;
+    }
+}
+
+@media (max-width: 650px) {
+    #header_nav .header_list:nth-child(2),
+    #header_nav .header_list:nth-child(3),
+    #header_nav .header_list:nth-child(4) {
+        display: none;
+    }
+}
+
+#header_icon_wrap img {
+    margin: 0 4px;
+}
+
+
+#search_results {
+    position: absolute;
+    background-color: white;
+    width: 100%;
+}
+
+.search-result-item {
+    padding: 12px 16px;
+    border-top: 1px solid black;
+    cursor: pointer;
+}
+
+.search-result-item:hover {
+    background-color: rgba(172, 170, 170, 0.1);
+}
+
+
+#header_alarm_dropdown {
+    padding: 16px 20px;
+    overflow-y: auto;
+    font-size: 14px;
+    font-weight: bold;
+    color: rgba(0, 0, 255, 0.6);
+}
+
+.header_alarm_dropdown_list {
+    margin-bottom: 12px;
+    cursor: pointer;
+}
+
+.header_alarm_dropdown_list:hover {
+    text-decoration: underline;
+}
+
+.header_alarm_dropdown_list:nth-last-child(1) {
+    margin-bottom: 0;
+}
+
+
+#cart_quantity {
+    position: absolute;
+    top: 0;
+    right: 0;
+    background-color: red;
+    color: white;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    text-align: center;
+    line-height: 20px;
+    font-size: 12px;
+}

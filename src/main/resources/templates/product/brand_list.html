@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Brand List</title>
+    <link rel="stylesheet" th:href="@{/css/font.css}">
+    <link rel="stylesheet" th:href="@{/css/header.css}">
+    <link rel="stylesheet" th:href="@{/css/brand_list.css}">
+    <script defer th:src="@{/js/header.js}"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <th:block th:insert="fragments/footerhead :: head"></th:block>
+</head>
+<body>
+<th:block th:replace="fragments/header1 :: header"></th:block>
+<main>
+    <div class="brand_wrap">
+        <th:block th:each="group : ${BrandNames}">
+            <ul class="brand" th:if="${group.value.size() > 0}">
+                <p class="brand_first_name" th:text="${group.key == '0' ? '0-9' : group.key}"></p>
+                <th:block th:each="brand : ${group.value}">
+                    <li class="brand_list">
+                        <a th:href="@{'/brand/' + ${brand}}" th:text="${brand}"></a>
+                    </li>
+                </th:block>
+            </ul>
+        </th:block>
+    </div>
+</main>
+<th:block th:replace="fragments/footer :: footer"></th:block>
+</body>
+</html>

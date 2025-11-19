@@ -1,0 +1,253 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="product">
+
+    <update id="setSafeUpdateOff">
+        SET SQL_SAFE_UPDATES = 0;
+    </update>
+
+    <update id="setSafeUpdateOn">
+        SET SQL_SAFE_UPDATES = 1;
+    </update>
+
+    <update id="setDeletedTrue">
+        UPDATE Product SET is_deleted = true;
+    </update>
+
+    <update id="setFTAFalse">
+        UPDATE Product SET is_fta = false;
+    </update>
+
+    <select id="checkId" resultType="int" parameterType="string">
+        SELECT COUNT(1)
+        FROM Product
+        WHERE product_id = #{product_id};
+    </select>
+
+    <update id="setDeletedFalse" parameterType="string">
+        UPDATE Product SET is_deleted = false WHERE product_id = #{product_id};
+    </update>
+
+    <select id="brandId" parameterType="string" resultType="int">
+        SELECT brand_id
+        FROM Brand
+        WHERE name = #{brand};
+    </select>
+
+    <select id="category1Id" parameterType="string" resultType="int">
+        SELECT category1_id
+        FROM Category1
+        WHERE name = #{category1};
+    </select>
+
+    <select id="category2Id" parameterType="string" resultType="int">
+        SELECT category2_id
+        FROM Category2
+        WHERE name = #{category2};
+    </select>
+
+    <select id="category3Id" parameterType="string" resultType="int">
+        SELECT category3_id
+        FROM Category3
+        WHERE name = #{category3};
+    </select>
+
+    <insert id="insert" parameterType="Map">
+        INSERT INTO Product (product_id, brand_id, image_url, name, original_price, current_price, description,
+        category1_id, category2_id, category3_id, is_excludedVoucher)
+        VALUES (#{product_id}, #{brand_id}, #{image_url}, #{name}, #{original_price}, #{current_price}, #{description},
+        #{category1_id}, #{category2_id}, #{category3_id}, #{is_excludedVoucher});
+    </insert>
+
+    <update id="setFTA" parameterType="String">
+        UPDATE Product SET is_fta = true WHERE product_id = #{product_id};
+    </update>
+
+    <select id="noMatchFTA" parameterType="String" resultType="String">
+        SELECT name
+        FROM Product
+        WHERE product_id != #{product_id};
+    </select>
+
+    <select id="selectAll" resultType="ProductDTO">
+        SELECT
+        p.product_id,
+        b.name AS brand,
+        p.image_url,
+        p.name,
+        p.original_price,
+        p.current_price,
+        p.description,
+        c1.name AS category1,
+        c2.name AS category2,
+        c3.name AS category3,
+        p.is_excludedVoucher,
+        p.is_fta
+        FROM Product p
+        LEFT JOIN Brand b ON p.brand_id = b.brand_id
+        LEFT JOIN Category1 c1 ON p.category1_id = c1.category1_id
+        LEFT JOIN Category2 c2 ON p.category2_id = c2.category2_id
+        LEFT JOIN Category3 c3 ON p.category3_id = c3.category3_id
+        WHERE p.is_deleted = false
+        ORDER BY b.name ASC, p.name ASC;
+    </select>
+
+    <select id="selectOne" resultType="ProductDTO" parameterType="String">
+        SELECT
+        p.product_id,
+        b.name AS brand,
+        p.image_url,
+        p.name,
+        p.original_price,
+        p.current_price,
+        p.description,
+        c1.name AS category1,
+        c2.name AS category2,
+        c3.name AS category3,
+        p.is_excludedVoucher,
+        p.is_fta
+        FROM Product p
+        LEFT JOIN Brand b ON p.brand_id = b.brand_id
+        LEFT JOIN Category1 c1 ON p.category1_id = c1.category1_id
+        LEFT JOIN Category2 c2 ON p.category2_id = c2.category2_id
+        LEFT JOIN Category3 c3 ON p.category3_id = c3.category3_id
+        WHERE p.name = #{name} AND p.is_deleted = false;
+    </select>
+
+    <select id="selectProductInBrand" resultType="ProductDTO" parameterType="String">
+        SELECT
+        p.product_id,
+        b.name AS brand,
+        p.image_url,
+        p.name,
+        p.original_price,
+        p.current_price,
+        p.description,
+        c1.name AS category1,
+        c2.name AS category2,
+        c3.name AS category3,
+        p.is_excludedVoucher,
+        p.is_fta
+        FROM Product p
+        LEFT JOIN Brand b ON p.brand_id = b.brand_id
+        LEFT JOIN Category1 c1 ON p.category1_id = c1.category1_id
+        LEFT JOIN Category2 c2 ON p.category2_id = c2.category2_id
+        LEFT JOIN Category3 c3 ON p.category3_id = c3.category3_id
+        WHERE p.is_deleted = false AND b.name = #{name}
+        ORDER BY p.name;
+    </select>
+
+    <select id="selectCartItemInfo" resultType="CartDTO" parameterType="String">
+        SELECT product_id, name AS productName, current_price AS price
+        FROM Product
+        WHERE product_id = #{product_id};
+    </select>
+
+    <select id="selectPreviousPrice" resultType="double">
+        SELECT current_price FROM Product WHERE product_id = #{product_id};
+    </select>
+
+    <update id="updateCurrentPrice" parameterType="ProductPriceDTO">
+        UPDATE Product SET current_price = #{currentPrice} WHERE product_id = #{productId};
+    </update>
+
+    <insert id="insertPriceDrop" parameterType="PriceDropDTO">
+        INSERT INTO PriceDrop (product_id, previous_price, current_price, created_at)
+        VALUES (#{productId}, #{previousPrice}, #{currentPrice}, NOW());
+    </insert>
+
+    <select id="selectAllBrandName" resultType="String">
+        SELECT DISTINCT b.name
+        FROM Product p
+        LEFT JOIN Brand b ON p.brand_id = b.brand_id
+        WHERE b.is_deleted = false
+        ORDER BY b.name;
+    </select>
+
+    <select id="selectAllCategoryName" resultType="String">
+        SELECT name FROM Category1
+        UNION
+        SELECT name FROM Category2
+        UNION
+        SELECT name FROM Category3
+        ORDER BY name;
+    </select>
+
+    <select id="selectMaxPrice" resultType="Map">
+        SELECT MAX(current_price) AS max_price
+        FROM Product
+        WHERE is_deleted = false;
+    </select>
+
+    <select id="selectAllFTA" resultType="ProductDTO">
+        SELECT
+        p.product_id,
+        b.name AS brand,
+        p.image_url,
+        p.name,
+        p.original_price,
+        p.current_price,
+        p.description,
+        c1.name AS category1,
+        c2.name AS category2,
+        c3.name AS category3,
+        p.is_excludedVoucher,
+        p.is_fta
+        FROM Product p
+        LEFT JOIN Brand b ON p.brand_id = b.brand_id
+        LEFT JOIN Category1 c1 ON p.category1_id = c1.category1_id
+        LEFT JOIN Category2 c2 ON p.category2_id = c2.category2_id
+        LEFT JOIN Category3 c3 ON p.category3_id = c3.category3_id
+        WHERE p.is_deleted = false AND p.is_fta = true
+        ORDER BY b.name ASC, p.name ASC;
+    </select>
+
+    <select id="selectAllFTABrandName" resultType="String">
+        SELECT DISTINCT b.name
+        FROM Product p
+        LEFT JOIN Brand b ON p.brand_id = b.brand_id
+        WHERE p.is_fta = true
+        ORDER BY b.name;
+    </select>
+
+    <select id="selectAllFTACategoryName" resultType="String">
+        SELECT name FROM Category1
+        WHERE EXISTS (
+        SELECT 1 FROM Product p
+        WHERE p.category1_id = Category1.category1_id
+        AND p.is_fta = true
+        )
+        UNION
+        SELECT name FROM Category2
+        WHERE EXISTS (
+        SELECT 1 FROM Product p
+        WHERE p.category2_id = Category2.category2_id
+        AND p.is_fta = true
+        )
+        UNION
+        SELECT name FROM Category3
+        WHERE EXISTS (
+        SELECT 1 FROM Product p
+        WHERE p.category3_id = Category3.category3_id
+        AND p.is_fta = true
+        )
+        ORDER BY name;
+    </select>
+
+    <select id="selectFTAMaxPrice" resultType="Map">
+        SELECT MAX(current_price) AS max_price
+        FROM Product
+        WHERE is_deleted = false AND is_fta = true;
+    </select>
+
+    <select id="selectBrandMaxPrice" resultType="Map" parameterType="String">
+        SELECT MAX(p.current_price) AS max_price
+        FROM Product p
+        JOIN Brand b ON p.brand_id = b.brand_id
+        WHERE p.is_deleted = false AND b.is_deleted = false AND b.name = #{brandName};
+    </select>
+
+</mapper>

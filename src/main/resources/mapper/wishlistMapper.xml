@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="wishlist">
+
+    <insert id="insertWishlist" parameterType="WishlistRequestDTO">
+        INSERT INTO Wishlist(user_id, product_id)
+        VALUES ((SELECT user_id FROM User WHERE email = #{email}), #{productId})
+    </insert>
+
+    <select id="selectWishlist" resultType="WishlistDTO">
+        SELECT w.wishlist_id AS wishlistId, p.product_id AS productId,
+        p.name, b.name AS brandName, p.image_url AS imageUrl,
+        p.original_price AS originalPrice, p.current_price AS currentPrice
+        FROM Wishlist w
+        JOIN Product p
+        ON w.product_id = p.product_id
+        JOIN User u
+        ON w.user_id = u.user_id
+        JOIN Brand b
+        ON b.brand_id = p.brand_id
+        WHERE u.email = #{email} AND p.is_deleted = FALSE
+        ORDER BY wishlist_id
+    </select>
+
+    <delete id="deleteWishlist" parameterType="WishlistRequestDTO">
+        DELETE FROM Wishlist
+        WHERE user_id = (SELECT user_id FROM User WHERE email = #{email})
+        AND product_id = #{productId}
+    </delete>
+
+    <select id="isInWishlist" parameterType="WishlistRequestDTO" resultType="int">
+        SELECT COUNT(*)
+        FROM Wishlist
+        WHERE user_id = (SELECT user_id FROM User WHERE email = #{email})
+        AND product_id = #{productId}
+    </select>
+
+    <insert id="insertNotification">
+        INSERT INTO Notification(user_id, product_id, created_at)
+        SELECT w.user_id, w.product_id, NOW()
+        FROM Wishlist w
+        JOIN PriceDrop p
+        ON w.product_id = p.product_id
+        WHERE p.notification_sent = FALSE;
+    </insert>
+
+    <update id="updateNotificationSent">
+        UPDATE PriceDrop
+        SET notification_sent = TRUE
+        WHERE notification_sent = FALSE;
+    </update>
+
+    <update id="setSafeUpdateOff">
+        SET SQL_SAFE_UPDATES = 0;
+    </update>
+
+    <update id="setSafeUpdateOn">
+        SET SQL_SAFE_UPDATES = 1;
+    </update>
+
+    <select id="selectNotification" resultType="NotificationDTO">
+        SELECT n.notification_id AS notificationId, u.email, p.product_id AS productId,
+        p.name AS productName, d.previous_price AS previousPrice, d.current_price AS currentPrice,
+        n.created_at AS createdAt, n.is_read AS isRead
+        FROM Notification n
+        JOIN PriceDrop d
+        ON n.product_id = d.product_id
+        JOIN Product p
+        ON n.product_id = p.product_id
+        JOIN User u
+        ON n.user_id = u.user_id
+        WHERE u.email = #{email} AND n.is_read = FALSE
+    </select>
+
+    <update id="readNotification">
+        UPDATE Notification
+        SET is_read = TRUE
+        WHERE notification_id = #{notificationId}
+    </update>
+
+
+    <select id="selectWishlistSize" resultType="int">
+        SELECT count(*) from Wishlist where user_id = (select user_id from User where email = #{email})
+    </select>
+
+
+
+</mapper>
+

@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cart</title>
+    <link rel="stylesheet" th:href="@{/css/mylist.css}">
+    <link rel="stylesheet" th:href="@{/css/font.css}">
+    <link rel="stylesheet" th:href="@{/css/header.css}">
+    <script defer th:src="@{/js/header.js}"></script>
+    <script defer th:src="@{/js/cart.js}"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <th:block th:insert="fragments/footerhead :: head"></th:block>
+</head>
+<body>
+<th:block th:replace="fragments/header1 :: header"></th:block>
+<main>
+
+    <div id="wrap_wrap2" th:data-taxBaseAmount="${taxBaseAmount}">
+        <p class="title">장바구니</p>
+        <hr>
+
+        <!-- 장바구니에 상품이 없을 때 표시될 메시지 -->
+        <div th:if="${#lists.isEmpty(cartProducts)}">
+            <p>장바구니에 상품이 없습니다.</p>
+        </div>
+
+        <!-- 장바구니에 상품이 있을 경우만 리스트와 결제 정보 표시 -->
+        <ul class="list_wrap" th:unless="${#lists.isEmpty(cartProducts)}">
+                <li class="list" th:each="item : ${cartProducts}">
+                    <div class="close_wrap">
+                        <a class="close" th:data-product-id="${item.product_id}"><img th:src="@{/img/close.svg}" alt="">
+                        </a>
+                    </div>
+                    <p class="price" th:data-current-price="${item.current_price}">
+                        Current Price</p>
+                    <div class="img_wrap">
+                        <img th:src="${item.image_url}" alt="Product Image" class="img">
+                    </div>
+                    <div class="info_box">
+                        <p class="info_title" th:text="${item.name}">Product Name</p>
+                        <ul class="info_wrap">
+                            <li class="info">
+                                <span class="original_price" th:data-original-price="${item.original_price}">Original Price</span>
+                                <b class="small"> * 원래가격</b>
+                            </li>
+                            <li class="info">19% 부가가치세 제외</li>
+                            <div th:unless="${item.is_excludedVoucher}" class="coupon" style="color: green;">* 쿠폰 적용 가능</div>
+                            <div th:if="${item.is_excludedVoucher}" class="coupon" style="color: red;">* 쿠폰 적용 불가능</div>
+                            <div th:if="${item.is_fta}" class="fta" style="color: green;">* FTA 적용</div>
+                            <div th:unless="${item.is_fta}" class="fta" style="color: red;">* FTA 미적용 (관세 부가 대상)</div>
+                        </ul>
+                        <div class="count_wrap">
+                            <div class="count count_minus" th:data-product-id="${item.product_id}">
+                                <img th:src="@{/img/minus2.svg}" alt="">
+                            </div>
+                            <div type="number" class="count_num" th:id="'count_num_'+ ${item.product_id}"
+                                   th:text="${item.quantity}"></div>
+                            <div class="count count_plus" th:data-product-id="${item.product_id}">
+                                <img th:src="@{/img/plus2.svg}" alt="">
+                            </div>
+                        </div>
+                    </div>
+                </li>
+        </ul>
+        <ul class="final_wrap" th:unless="${#lists.isEmpty(cartProducts)}">
+            <div class="coupon_wrap">
+                <input type="text" id="coupon_input" placeholder="쿠폰 할인율을 입력하세요" class="coupon_input" maxlength="2">
+                <button type="button" id="apply_coupon_button" class="apply_coupon_button">쿠폰 적용</button>
+            </div>
+            <li class="final"><p>총 상품 금액 </p><span id="total_original_p">519,000</span></li>
+            <li class="final"><p>총 할인 금액 </p><span id="total-sale_p"></span></li>
+            <li class="final"><p>예상 배송비 </p><span id="shipping_p" th:text="${#numbers.formatInteger(shipPrice, 3, 'COMMA')}" >30,000</span></li>
+            <li class="final"><p>예상 부가세 </p><span id="total_VAT">0</span></li>
+            <li class="final"><p>예상 관세 </p><span id="total_Tax">0</span></li>
+            <li class="final"><p id="final_p">최종 금액 </p><span id="final_span">222,220</span></li>
+        </ul>
+    </div>
+</main>
+
+<th:block th:replace="fragments/footer :: footer"></th:block>
+
+</body>
+</html>
