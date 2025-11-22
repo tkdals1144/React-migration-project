@@ -1,7 +1,7 @@
 import { useState } from 'react'
-import MainPage from './componets/Main/MainPage.jsx'
+import MainPage from './components/Main/MainPage.jsx'
 import './App.css'
-import { Header, Footer, Login, Signup, Info } from './componets'
+import { Header, Footer, Login, Signup, Info } from './components'
 import { Navigate, Route, Routes } from 'react-router-dom'
 
 function App() {
