@@ -6,6 +6,7 @@ import { Navigate, Route, Routes } from 'react-router-dom'
 
 function App() {
   const [count, setCount] = useState(0);
+  const [email, setEmail] = useState(null);
   
   // header/footer 제외할 경로
   const noLayoutRoutes = ["/login", "/signup", "/board"];
@@ -18,7 +19,7 @@ function App() {
       <Routes>
         <Route path='/' element = {<MainPage/>}/>
         <Route path='/main' element = {<Navigate to='/' replace/>}/>
-        <Route path='/login' element = {<Login/>}/>
+        <Route path='/login' element = {<Login props={setEmail}/>}/>
         <Route path='/signup' element = {<Signup/>}/>
         <Route path='/info' element = {<Info/>}/>
       </Routes>

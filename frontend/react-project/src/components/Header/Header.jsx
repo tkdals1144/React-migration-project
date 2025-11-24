@@ -4,7 +4,7 @@ import styles from './Header.module.css'
 
 function Header() {
     // 일단 null로 처리해둠
-    const [email, setEmail] = useState(null);
+    const [user, setUser] = useState(null);
     return (
         <>
             <header>
