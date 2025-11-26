@@ -40,13 +40,13 @@ function MainPage() {
                     </div>
                     <ul id={styles.banner}>
                         {
-                            images.map((bi, index) => (
-                                <li key={index} className={styles.banner_img_wrap}>
-                                    <Link to="/promotion" target='_blank' rel='noreferrer'>
-                                        <img src={bi} alt={`Banner ${index + 1}`} className={styles.banner_img}/>
-                                    </Link>
-                                </li>
-                            ))
+                            // images.map((bi, index) => (
+                            //     <li key={index} className={styles.banner_img_wrap}>
+                            //         <Link to="/promotion" target='_blank' rel='noreferrer'>
+                            //             <img src={bi} alt={`Banner ${index + 1}`} className={styles.banner_img}/>
+                            //         </Link>
+                            //     </li>
+                            // ))
                         }
                     </ul>
                 </div>

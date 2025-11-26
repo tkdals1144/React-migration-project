@@ -2,9 +2,11 @@ import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 import styles from './Header.module.css'
 
-function Header() {
+function Header({ email }) {
     // 일단 null로 처리해둠
     const [user, setUser] = useState(null);
+    const [alarm, setAlarm] = useState(false);
+    const [openDropdown, setOpenDropdown] = useState(false);
     return (
         <>
             <header>
@@ -33,17 +35,43 @@ function Header() {
                         <div id={styles.alarm_small_icon} className={styles.small_icon_wrap}>
                             <img src="/dot.svg" alt="" className={styles.small_icon}/>
                         </div>
-                        <img src="/header_alarm.svg" alt="" id={styles.header_alarm} className={styles.header_icon}/>
-                        <ul id={styles.header_alarm_dropdown}>
-                        </ul>
+                        <img src="/header_alarm.svg" alt="" id={styles.header_alarm} className={styles.header_icon} onClick={ () => 
+                            setAlarm(!alarm)
+                        }/>
+                        {alarm && 
+                            <ul id={styles.header_alarm_dropdown}>
+                            </ul>
+                        }
 
                         {/* <!-- 프로필 아이콘 --> */}
-                        <img src="/header_profile.svg" alt="" id={styles.header_profile} className={styles.header_icon}/>
+                        <img src="/header_profile.svg" alt="" id={styles.header_profile} className={styles.header_icon} onClick={ () =>
+                            setOpenDropdown(!openDropdown)
+                        }/>
 
                         {/* <!-- 로그인/회원가입 메뉴 --> */}
                         {/* session.email은 어떤식으로 가져올지에 대해 생각을 해봐야 할듯함 */}
                         {/* th:if 문은 react의 jsx내 js 3항연산자를 이용해 처리 */}
-                        {email ? 
+                        {openDropdown && 
+                            (email ? 
+                                <ul id={styles.header_profile_dropdown2} className={styles.dropdown}>
+                                    <li className={styles.header_profile_dropdown_list}>
+                                        <Link to="/logout">로그아웃</Link>
+                                    </li>
+                                    <li className={styles.header_profile_dropdown_list}>
+                                        <Link to="/myPage">마이페이지</Link>
+                                    </li>
+                                </ul> :
+                                <ul id={styles.header_profile_dropdown} className={styles.dropdown}>
+                                    <li className={styles.header_profile_dropdown_list}>
+                                        <Link to="/login">로그인</Link>
+                                    </li>
+                                    <li className={styles.header_profile_dropdown_list}>
+                                        <Link to="/signup">회원가입</Link>
+                                    </li>
+                                </ul>
+                            )
+                        }
+                        {/* {email ? 
                             <ul id={styles.header_profile_dropdown2} className={styles.dropdown}>
                                 <li className={styles.header_profile_dropdown_list}>
                                     <Link to="/logout">로그아웃</Link>
@@ -60,7 +88,7 @@ function Header() {
                                     <Link to="/signup">회원가입</Link>
                                 </li>
                             </ul>
-                        }
+                        } */}
 
                         {/* <!-- 장바구니 아이콘 -->
                         <!-- 장바구니 아이콘 --> */}

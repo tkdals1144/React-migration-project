@@ -2,9 +2,10 @@ import { useState } from 'react'
 import MainPage from './components/Main/MainPage.jsx'
 import './App.css'
 import { Header, Footer, Login, Signup, Info } from './components'
-import { Navigate, Route, Routes } from 'react-router-dom'
+import { Navigate, Route, Routes, useLocation } from 'react-router-dom'
 
 function App() {
+  const location = useLocation();
   const [count, setCount] = useState(0);
   const [email, setEmail] = useState(null);
   
@@ -15,7 +16,7 @@ function App() {
 
   return (
     <>
-      {!hideLayout && <Header/>}
+      {!hideLayout && <Header email={email}/>}
       <Routes>
         <Route path='/' element = {<MainPage/>}/>
         <Route path='/main' element = {<Navigate to='/' replace/>}/>

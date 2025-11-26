@@ -125,7 +125,7 @@ header {
 
 #header_alarm_dropdown, #header_profile_dropdown, #header_profile_dropdown2{
     position: absolute;
-    display: none;
+    display: block;
     background-color: white;
     top: 40px;
     border: 1px solid rgba(148, 147, 147, 1);
