@@ -33,10 +33,10 @@ function MainPage() {
             <div className={styles.main}>
                 <div id={styles.banner_wrap}>
                     <div id={styles.prev_btn_wrap} className={styles.btn_wrap} onClick={handlePrev}>
-                        <img src='/prev.svg' alt='' className={styles.btn}/>
+                        <img src='/img/prev.svg' alt='' className={styles.btn}/>
                     </div>
                     <div id={styles.next_btn_wrap} className={styles.btn_wrap} onCanPlay={handleNext}>
-                        <img src='/next.svg' alt='' className={styles.btn}/>
+                        <img src='/img/next.svg' alt='' className={styles.btn}/>
                     </div>
                     <ul id={styles.banner}>
                         {

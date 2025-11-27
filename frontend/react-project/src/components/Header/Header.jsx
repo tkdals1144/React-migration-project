@@ -22,20 +22,20 @@ function Header({ email }) {
                 <div id={styles.wrap1}>
                     <div id={styles.header_input_wrap}>
                         <input type="text" id={styles.header_input} placeholder="상품명을 입력하세요" autoComplete="off"/>
-                        <img src="/header_search.svg" alt="" id={styles.header_search}/>
+                        <img src="/img/header_search.svg" alt="" id={styles.header_search}/>
                     </div>
                     <div id={styles.header_icon_wrap}>
                         <div id={styles.wishlist_small_icon} className={styles.small_icon_wrap}>
                             <span id={styles.wishlist_size} className={styles.small_txt}></span>
                         </div>
                         <Link to="/wishlist">
-                            <img src="/header_wishlist.svg" alt="Wishlist" id={styles.header_wishlist} className={styles.header_icon}/>
+                            <img src="/img/header_wishlist.svg" alt="Wishlist" id={styles.header_wishlist} className={styles.header_icon}/>
                         </Link>
                         {/* <!-- 알림 아이콘 --> */}
                         <div id={styles.alarm_small_icon} className={styles.small_icon_wrap}>
-                            <img src="/dot.svg" alt="" className={styles.small_icon}/>
+                            <img src="/img/dot.svg" alt="" className={styles.small_icon}/>
                         </div>
-                        <img src="/header_alarm.svg" alt="" id={styles.header_alarm} className={styles.header_icon} onClick={ () => 
+                        <img src="/img/header_alarm.svg" alt="" id={styles.header_alarm} className={styles.header_icon} onClick={ () => 
                             setAlarm(!alarm)
                         }/>
                         {alarm && 
@@ -44,7 +44,7 @@ function Header({ email }) {
                         }
 
                         {/* <!-- 프로필 아이콘 --> */}
-                        <img src="/header_profile.svg" alt="" id={styles.header_profile} className={styles.header_icon} onClick={ () =>
+                        <img src="/img/header_profile.svg" alt="" id={styles.header_profile} className={styles.header_icon} onClick={ () =>
                             setOpenDropdown(!openDropdown)
                         }/>
 
@@ -93,7 +93,7 @@ function Header({ email }) {
                         {/* <!-- 장바구니 아이콘 -->
                         <!-- 장바구니 아이콘 --> */}
                         <Link to="/cart/view">
-                            <img src="/header_bucket.svg" alt="" id={styles.header_bucket} className={styles.header_icon}/>
+                            <img src="/img/header_bucket.svg" alt="" id={styles.header_bucket} className={styles.header_icon}/>
                             <span id={styles.cart_quantity} className={styles.cart_quantity} style={{ display: "none" }}>0</span>
                         </Link>
 
