@@ -1,46 +1,59 @@
 import React, { useState } from 'react'
-import axios from "axios";
-import { useNavigate, Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 import styles from './Login.module.css'
+import { useLogin } from '../../hooks/useLogin';
 
 function Login({setUser}) {
-
-  const [error, setError] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-    // await를 사용하기 위한 async 함수
-    const handleSubmit = async (e) => {
-        // form 태그의 폼 전송 기능 차단
-        e.preventDefault();
+    // // await를 사용하기 위한 async 함수
+    // const handleSubmit = async (e) => {
+    //     // form 태그의 폼 전송 기능 차단
+    //     e.preventDefault();
 
-        // react의 강점인 SPA 방식을 살리기 위해선 JSON 비동기 방식으로 로그인을 처리해야 한다.
-        // 기존에는 form을 전송하고 Controller에서 폼을 보내주는 방식을 사용했기에 @Controller 를 사용했다.
-        // 추후 Spring단의 코드를 개편할때는 뷰 렌더링 기능은 뺄 테니 JSON 응답에 특화된 @RestController로 변경하면 될 듯 하다.
+    //     // react의 강점인 SPA 방식을 살리기 위해선 JSON 비동기 방식으로 로그인을 처리해야 한다.
+    //     // 기존에는 form을 전송하고 Controller에서 폼을 보내주는 방식을 사용했기에 @Controller 를 사용했다.
+    //     // 추후 Spring단의 코드를 개편할때는 뷰 렌더링 기능은 뺄 테니 JSON 응답에 특화된 @RestController로 변경하면 될 듯 하다.
 
-        try {
-            // await는 post가 서버 응답을 줄 때까지 기다린 후 JSON 결과값을 res에 부여해 줌
-            // axios.post 를 통해 HTTP POST 요청을 /login 경로로 보냄
-            // 요청 본문에 { email, password } 라는 JSON 데이터를 담아서 보냄
-            // 결과값으로 { succes : true , username : "123" } 과 같은 JSON 응답을 받음
-            const res = await axios.post("/login", { email, password });
-            if (res.data.success) {
-              setUser(res.data.username); // 로그인 성공 → App 상태 갱신
-              navigate("/main"); // 로그인 성공 후 /main 이동
-            } else {
-              setError(res.data.message);
-            }
-        } catch (err) {
-            setError("로그인 서버 오류");
-            console.error(error);
-        }
+    //     try {
+    //         // await는 post가 서버 응답을 줄 때까지 기다린 후 JSON 결과값을 res에 부여해 줌
+    //         // axios.post 를 통해 HTTP POST 요청을 /login 경로로 보냄
+    //         // 요청 본문에 { email, password } 라는 JSON 데이터를 담아서 보냄
+    //         // 결과값으로 { succes : true , username : "123" } 과 같은 JSON 응답을 받음
+    //         const res = await axios.post("/login", { email, password });
+    //         if (res.data.success) {
+    //           setUser(res.data.username); // 로그인 성공 → App 상태 갱신
+    //           navigate("/main"); // 로그인 성공 후 /main 이동
+    //         } else {
+    //           setError(res.data.message);
+    //         }
+    //     } catch (err) {
+    //         setError("로그인 서버 오류");
+    //         console.error(error);
+    //     }
 
         // 위의 await 방식을 함수형 체인 구조로 변환하면 이렇게도 변환할 수 있다.
         // axios.post("/login", { email, password })
         // .then(res => res.data.success ? setUser(res.data.username) : setError(res.data.message))
         // .catch(err => setError("로그인 서버 오류"));
 
-    }
+
+        // Custom Hook 인 useLogin 호출
+        const { login, error, isLoading, setError } = useLogin(setUser);
+
+        const handleSubmit = async (e) => {
+            e.preventDefault();
+
+            if (!email.trim() || !password.trim()) {
+                setError("이메일과 비밀번호를 모두 입력해주세요");
+                return;
+            }
+
+            // 유효성 통과 후, Hook의 로그인 함수를 호출해 비즈니스 로직에 위임
+            await login(email, password);
+        }
+
     
     return (
         // <main>
@@ -77,7 +90,7 @@ function Login({setUser}) {
                     <input type="password" id={styles.passwd} name="password" placeholder="비밀번호를 입력해주세요" value={password} onChange={
                         (e) => setPassword(e.target.value)
                     }/>
-                    <button id={styles.login_btn} type="submit">로그인</button>
+                    <button id={styles.login_btn} type="submit" disabled={isLoading}>로그인</button>
                 </div>
             </form>
             <div id={styles.anchor_box}>
