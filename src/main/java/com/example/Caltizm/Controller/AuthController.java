@@ -6,16 +6,16 @@ import com.example.Caltizm.Repository.CartRepository;
 import com.example.Caltizm.Repository.UserRepository;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@Controller
+@RestController
 public class AuthController {
 
     @Autowired
@@ -24,57 +24,67 @@ public class AuthController {
     @Autowired
     CartRepository cartRepository;
 
-    @GetMapping("/login")
-    public String login1() {
+    public static class LoginResponse {
+        private final boolean success;
+        private final String username;
+        private final String message;
 
-        return "auth/login";
+        public LoginResponse(boolean success, String username, String message) {
+            this.success = success;
+            this.username = username;
+            this.message = message;
+        }
 
+        public boolean isSuccess() {return success;}
+        public String getUsername() {return username;}
+        public String getMessage() {return message;}
     }
 
     @PostMapping("/login")
-    public String login2(@ModelAttribute LoginRequestDTO loginRequestDTO, HttpSession session) {
+    public ResponseEntity<LoginResponse> login2(@RequestBody LoginRequestDTO loginRequestDTO, HttpSession session) {
 
+        // 일단 DTO로부터 email과 password를 받아옴
         String email = loginRequestDTO.getEmail();
         String password = loginRequestDTO.getPassword();
-
-        System.out.println(email);
-        System.out.println(password);
-        System.out.println(loginRequestDTO);
 
         LoginRequestDTO user = userRepository.selectUserLogin(email);
         if (user == null || !password.equals(user.getPassword())) {
             System.out.println("이메일, 비밀번호 불일치");
-            return "redirect:/login";
+            // 로그인 실패 시 JSON 응답 반환
+            return ResponseEntity.ok(new LoginResponse(false, null, "이메일, 비밀번호 불일치"));
         }
 
         session.setAttribute("email", user.getEmail());
 
-
         // 세션에서 cartList 가져오기
-        List<CartDTO> cartList = (List<CartDTO>) session.getAttribute("cartList");
 
-        System.out.println("이메일 : " + user.getEmail());
-        Integer userID = userRepository.selectUserIdByEmail(user.getEmail());
-        System.out.println("user_id : " + userID);
+        try {
+            Integer userID = userRepository.selectUserIdByEmail(user.getEmail());
+            List<CartDTO> cartList = (List<CartDTO>) session.getAttribute("cartList");
+            List<CartDTO> finalCartList = new ArrayList<>();
 
-        if (cartList != null && !cartList.isEmpty()){
-            cartRepository.deleteCartListByUserId(userID);
-            Map<String, Object> input = new HashMap<>();
-            input.put("user_id", userID);
-            input.put("cartList", cartList);
-            cartRepository.insertSessionCartList(input);
-        }else{
-            List<CartDTO> cartListByUserId =  cartRepository.selectCartListByUserId(userID);
-            if(cartListByUserId != null){
-                cartList = cartListByUserId;
+            if (cartList != null && !cartList.isEmpty()){
+                cartRepository.deleteCartListByUserId(userID);
+                Map<String, Object> input = new HashMap<>();
+                input.put("user_id", userID);
+                input.put("cartList", cartList);
+                cartRepository.insertSessionCartList(input);
+                finalCartList = cartList;
+            } else {
+                // 비회원 장바구니가 없으면, DB의 기존 회원 장바구니를 가져옴
+                List<CartDTO> cartListByUserId = cartRepository.selectCartListByUserId(userID);
+                if (cartListByUserId != null) {
+                    finalCartList = cartListByUserId;
+                }
             }
+
+            session.setAttribute("cartList", finalCartList);
+            // 로그인 성공을 응답
+            return ResponseEntity.ok(new LoginResponse(true, user.getEmail(), "로그인 성공"));
+        } catch (Exception e) {
+            session.invalidate();
+            return ResponseEntity.internalServerError().body(new LoginResponse(false, null, "로그인 서버 오류"));
         }
-
-
-        session.setAttribute("cartList", cartList);
-        //모델에 테이블 값 심기
-
-        return "redirect:/main";
 
     }
 
