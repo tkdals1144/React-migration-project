@@ -44,3 +44,7 @@
 - useLogin Custom Hook 을 통한 의존성 주입 및 결합도 감소
 
 -------------------------------------
+## 2025-12-02
+- LoginController 구조 변경
+- html을 반환하는 기존 형태를 JSON 데이터를 반환하도록 변경
+- LoginRequsetDTO getter/setter 추가
