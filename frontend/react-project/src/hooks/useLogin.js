@@ -13,7 +13,7 @@ function useLogin(setUser) {
 
         try {
             //1. 통신 로직과 await 비동기 처리
-            const res = await axios.post("/login", {email, password});
+            const res = await axios.post("/api/login", {email, password});
 
             // 2. 비즈니스 로직 및 상태 처리
             if (res.data.success) {
@@ -21,6 +21,7 @@ function useLogin(setUser) {
                 navigate("/main");
             } else {
                 setError(res.data.message || "로그인 실패");
+                console.log(error);
             }
         } catch (err) {
             console.error(err);

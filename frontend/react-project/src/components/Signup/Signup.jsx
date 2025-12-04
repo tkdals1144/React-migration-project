@@ -2,49 +2,67 @@ import axios from 'axios';
 import React, { useState } from 'react'
 import { Link } from "react-router-dom"
 import styles from './Signup.module.css'
+import useAddressSearch from './../../hooks/useAddressSearch';
 
 function Signup( {setUser} ) {
 
-  const [data, setData] = useState({
-    last_name : "",
-    first_name : "",
-    email : "",
-    phone : "",
-    birth : "",
-    address : "",
-    zip_code : "",
-    detail : "",
-    password : "",
-    checkPw : "",
-    pccc : ""
-  });
-  const [error, setError] = useState("");
+    const [data, setData] = useState({
+        last_name : "",
+        first_name : "",
+        email : "",
+        phone : "",
+        birth : "",
+        address : "",
+        zip_code : "",
+        detail : "",
+        password : "",
+        checkPw : "",
+        pccc : ""
+    });
+    const [error, setError] = useState("");
 
-  const handleChange = (e) => {
-    const {name, value} = e.target;
-    // ...prev를 통해 기존의 값 전개
-    // 두번째 인자로 중복값을 넣음으로써 해당 값으로 업데이트 ([name] : value)
-    setData((prev) => ({ ...prev, [name] : value }));
-  }
+    // 2. 주소 검색 완료 시 실행될 콜백 함수 정의
+    const handleAddressComplete = (data) => {
+        // Daum 팝업에서 최종적으로 정리된 데이터를 받아서 State를 업데이트
+        setData(prev => ({ 
+        ...prev, 
+        address: data.roadAddress || data.jibunAddress, // 도로명 또는 지번 주소
+        zip_code: data.zonecode,
+        // (옵션) 추가 정보 필드가 있다면 여기에 추가: data.addressEnglish
+        }));
+    
+        // 3. 상세 주소 필드에 포커스 주기 (DOM 조작은 Ref를 통해 안전하게)
+        if (detailAddressRef.current) {
+            detailAddressRef.current.focus();
+        }
+    };
+    const openPostcode = useAddressSearch(handleAddressComplete);
+    
+    const handleChange = (e) => {
+        const {name, value} = e.target;
+        // ...prev를 통해 기존의 값 전개
+        // 두번째 인자로 중복값을 넣음으로써 해당 값으로 업데이트 ([name] : value)
+        setData((prev) => ({ ...prev, [name] : value }));
+    }
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
+        e.preventDefault();
 
-    try {
-      const res = await axios.post("/api/signup", data)
-      if (res.data.sucess) {
-        setUser(res.data.username);
-      } else {
-        setError(res.data.message);
-      }
-    } catch(err) {
-      setError("서버 오류");
+        try {
+        const res = await axios.post("/api/signup", data)
+        if (res.data.sucess) {
+            setUser(res.data.username);
+        } else {
+            setError(res.data.message);
+        }
+        } catch(err) {
+        setError("서버 오류");
+        }
     }
-  }
 
-  return (
-    <div className={styles.main_wrap}>
-            <main>
+    return (
+        <div className={styles.main_wrap}>
+        <main>
         <Link to='/main'>
             <h1 className={styles.h1}>CALTIZM</h1>
         </Link>
