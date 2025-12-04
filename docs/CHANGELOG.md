@@ -49,3 +49,8 @@
 - html을 반환하는 기존 형태를 JSON 데이터를 반환하도록 변경
 - LoginRequsetDTO getter/setter 추가
 
+-------------------------------------
+## 2025-12-04
+- SignUpController 구조 변경
+- Signup Custom Hook 제작
+- react 스타일에 맞춘 유효성 검사 재구성
