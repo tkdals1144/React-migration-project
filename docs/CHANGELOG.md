@@ -54,3 +54,8 @@
 - SignUpController 구조 변경
 - Signup Custom Hook 제작
 - react 스타일에 맞춘 유효성 검사 재구성
+
+-------------------------------------
+## 2025-12-05
+- SignUp Custom Hook 변경 및 추가
+- Signup.js 로직 react 스타일에 맞춰 변경
