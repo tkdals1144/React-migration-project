@@ -1,10 +1,28 @@
 import axios from 'axios';
-import React, { useState } from 'react'
-import { Link } from "react-router-dom"
+import React, { useCallback, useState, useEffect } from 'react'
+import { Link, useNavigate } from "react-router-dom"
 import styles from './Signup.module.css'
 import useAddressSearch from './../../hooks/useAddressSearch';
+import useMultiAddress from "./../../hooks/useMultiAddress";
+import useSignupValidation from "./../../hooks/useSignupValidation";
 
 function Signup( {setUser} ) {
+
+    const navigate = useNavigate();
+    const {
+        addresses,
+        handleAddAddress,
+        handleRemoveAddress,
+        handleDetailChange,
+        handleUpdateAddress,
+        setDetailAddressRef
+    } = useMultiAddress();
+
+    useEffect(() => {
+        console.log("리렌더링");
+    }, [addresses])
+
+    const { validate, validationError } = useSignupValidation();
 
     const [data, setData] = useState({
         last_name : "",
@@ -12,9 +30,6 @@ function Signup( {setUser} ) {
         email : "",
         phone : "",
         birth : "",
-        address : "",
-        zip_code : "",
-        detail : "",
         password : "",
         checkPw : "",
         pccc : ""
@@ -22,22 +37,19 @@ function Signup( {setUser} ) {
     const [error, setError] = useState("");
 
     // 2. 주소 검색 완료 시 실행될 콜백 함수 정의
-    const handleAddressComplete = (data) => {
-        // Daum 팝업에서 최종적으로 정리된 데이터를 받아서 State를 업데이트
-        setData(prev => ({ 
-        ...prev, 
-        address: data.roadAddress || data.jibunAddress, // 도로명 또는 지번 주소
-        zip_code: data.zonecode,
-        // (옵션) 추가 정보 필드가 있다면 여기에 추가: data.addressEnglish
-        }));
-    
-        // 3. 상세 주소 필드에 포커스 주기 (DOM 조작은 Ref를 통해 안전하게)
-        if (detailAddressRef.current) {
-            detailAddressRef.current.focus();
-        }
+    const handleAddressComplete = (id, data) => {
+        // id를 기반으로 해당 주소 state만 업데이트
+        handleUpdateAddress(id, {
+            address: data.roadAddress || data.jibunAddress,
+            zip_code: data.zonecode
+        });
+
+        // const ref = detailAddressRefs[id];
+        // if (ref) ref.focus();
     };
+
     const openPostcode = useAddressSearch(handleAddressComplete);
-    
+
     const handleChange = (e) => {
         const {name, value} = e.target;
         // ...prev를 통해 기존의 값 전개
@@ -45,18 +57,29 @@ function Signup( {setUser} ) {
         setData((prev) => ({ ...prev, [name] : value }));
     }
 
-  const handleSubmit = async (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
 
-        try {
-        const res = await axios.post("/api/signup", data)
-        if (res.data.sucess) {
-            setUser(res.data.username);
-        } else {
-            setError(res.data.message);
+        // 모든 값 검증
+        if (!validate(data, addresses)) {
+            setError(validationError);
+            return;
         }
-        } catch(err) {
-        setError("서버 오류");
+
+        try {
+            const res = await axios.post("/api/signup", {
+                ...data,
+                addresses
+            });
+            if (res.data.success) {
+                navigate("/main");
+            } else {
+                setError(res.data.message);
+                console.log(error);
+            }
+        } catch (err) {
+            console.log(err);
+            setError("서버 오류");
         }
     }
 
@@ -85,20 +108,66 @@ function Signup( {setUser} ) {
                         <input type="date" name="birth_date" id={styles.birth} className={styles.input} onChange={handleChange} min="1925-01-01" max="2006-12-31" placeholder="생년월일을 8자로 적어주세요" required/>
                     </div>
                 </div>
-                <div className={`${styles.bigbox} ${styles.address_bigbox}`} id={styles.address_box_box}>
-                    <div id={styles.address_box} className={styles.box} onclick="execDaumPostcode(event)">
-                        <p className={`${styles.input} ${styles.addressEnglishText}`}>영문주소</p>
-                        <input type="text" name="address" className={styles.addressEnglish} onChange={handleChange} style={{display: "none"}}/>
+                {addresses.map(item => (
+                    <div 
+                        key={item.id} 
+                        className={`${styles.bigbox} ${styles.address_bigbox}`}
+                    >
+                        <div 
+                            className={styles.box}
+                            onClick={() => openPostcode(item.id)}   // 주소 검색, item.id 기반
+                        >
+                            <p className={`${styles.input} ${styles.addressEnglishText}`} style={{
+                                color : item.address ? "#000" : "#aaa"
+                            }}>{item.address ? item.address : "영문주소"}</p>
+                            <input 
+                                type="text" 
+                                value={item.address}
+                                className={styles.addressEnglish}
+                                readOnly
+                                style={{display : 'none'}}
+                            />
+                        </div>
+
+                        <div 
+                            className={styles.box}
+                            onClick={() => openPostcode(item.id)}
+                        >
+                            <p className={`${styles.input} ${styles.postcodeText}`} style={{
+                                color : item.zip_code ? "#000" : "#aaa"
+                            }}>{item.zip_code ? item.zip_code : "우편번호"}</p>
+                            <input 
+                                type="text" 
+                                value={item.zip_code} 
+                                className={styles.postcode}
+                                readOnly
+                                style={{display : 'none'}}
+                            />
+                        </div>
+
+                        <div className={styles.box}>
+                            <input 
+                                type="text" 
+                                placeholder="상세주소 입력"
+                                value={item.detail}
+                                className={`${styles.input} ${styles.detailAddress}`}
+                                onChange={(e) => handleDetailChange(item.id, e.target.value)}
+                                ref={(el) => setDetailAddressRef(item.id, el)}
+                                required
+                            />
+                        </div>
+
+                        {/* 삭제 버튼 */}
+                        <div className={styles.close_wrap}>
+                            <img 
+                                src="/img/close.svg" 
+                                className="close"
+                                onClick={() => handleRemoveAddress(item.id)}
+                            />
+                        </div>
                     </div>
-                    <div id={styles.postcode_box} className={styles.box} onclick="execDaumPostcode(event)">
-                        <p className={`${styles.input} ${styles.postcodeText}`}>우편번호</p>
-                        <input type="text" name="zip_code" className={styles.postcode} onChange={handleChange} style={{display: "none"}}/>
-                    </div>
-                    <div id={styles.detailed_address_box} className={styles.box}>
-                        <input type="text" name="detail" className={`${styles.input} ${styles.detailAddress}`} onChange={handleChange} placeholder="상세주소를 입력해주세요" required/>
-                    </div>
-                </div>
-                <div id={styles.plus_btn}>
+                ))}
+                <div id={styles.plus_btn} onClick={handleAddAddress}>
                     <img className={styles.plus} src="/img/plus.svg" alt=""/>
                 </div>
                 <div className={styles.bigbox}>
@@ -120,5 +189,4 @@ function Signup( {setUser} ) {
     </div>
   )
 }
-
 export default Signup

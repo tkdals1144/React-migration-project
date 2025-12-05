@@ -81,14 +81,24 @@ function useMultiAddress() {
         addressRefs.current[id] = element;
     }, []);
 
+    const handleUpdateAddress = useCallback((id, updatedValues) => {
+        setAddresses(prev =>
+            prev.map(item =>
+                item.id === id
+                    ? { ...item, ...updatedValues }
+                    : item
+            )
+        );
+    }, []);
+
 
     return {
         addresses,
         handleAddAddress,
         handleRemoveAddress,
         handleDetailChange,
-        handleAddressComplete,
-        setDetailAddressRef,
+        handleUpdateAddress,
+        setDetailAddressRef
     };
 }
 
