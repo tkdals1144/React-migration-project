@@ -20,8 +20,8 @@ function App() {
       <Routes>
         <Route path='/' element = {<MainPage/>}/>
         <Route path='/main' element = {<Navigate to='/' replace/>}/>
-        <Route path='/login' element = {<Login props={setEmail}/>}/>
-        <Route path='/signup' element = {<Signup/>}/>
+        <Route path='/login' element = {<Login setUser={setEmail}/>}/>
+        <Route path='/signup' element = {<Signup setUser={setEmail}/>}/>
         <Route path='/info' element = {<Info/>}/>
       </Routes>
       {!hideLayout && <Footer/>}
