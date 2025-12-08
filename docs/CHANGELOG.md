@@ -59,3 +59,10 @@
 ## 2025-12-05
 - SignUp Custom Hook 변경 및 추가
 - Signup.js 로직 react 스타일에 맞춰 변경
+
+-------------------------------------
+## 2025-12-08
+- SignUpController 추가변경 (반환 객체 inner class 추가)
+- 회원가입 정상동작을 Signup Custom Hook 최종변경
+- MainPage 단순 계산 로직 utils 폴더로 분리
+- MainPage banner UseRef와 UseEffect를 이용하여 제작
