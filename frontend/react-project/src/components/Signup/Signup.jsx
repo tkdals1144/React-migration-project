@@ -28,8 +28,8 @@ function Signup( {setUser} ) {
         last_name : "",
         first_name : "",
         email : "",
-        phone : "",
-        birth : "",
+        phone_number : "",
+        birth_date : "",
         password : "",
         checkPw : "",
         pccc : ""
@@ -59,14 +59,18 @@ function Signup( {setUser} ) {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        console.log("일단 동작")
+        console.log(data.phone);
 
         // 모든 값 검증
         if (!validate(data, addresses)) {
             setError(validationError);
+            console.log(error);
             return;
         }
-
+        console.log("??");
         try {
+            
             const res = await axios.post("/api/signup", {
                 ...data,
                 addresses

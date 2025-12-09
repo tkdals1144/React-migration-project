@@ -28,6 +28,10 @@ public class UserRepository {
 
     }
 
+    public UserDataDTO selectUserInfo2(String email) {
+        return session.selectOne(userNamespace + "selectUserInfo", email);
+    }
+
     public int updateUserInfo(UserUpdateDTO userUpdateDTO){
 
         return session.update(userNamespace + "updateUserInfo", userUpdateDTO);

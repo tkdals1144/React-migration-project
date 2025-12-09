@@ -1,10 +1,11 @@
 import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 import styles from './Header.module.css'
+import useLogout from '../../hooks/useLogout'
 
-function Header({ email }) {
-    // 일단 null로 처리해둠
-    const [user, setUser] = useState(null);
+function Header({ email, setEmail }) {
+    
+    const { logout } = useLogout(setEmail);
     const [alarm, setAlarm] = useState(false);
     const [openDropdown, setOpenDropdown] = useState(false);
     return (
@@ -54,11 +55,11 @@ function Header({ email }) {
                         {openDropdown && 
                             (email ? 
                                 <ul id={styles.header_profile_dropdown2} className={styles.dropdown}>
-                                    <li className={styles.header_profile_dropdown_list}>
-                                        <Link to="/logout">로그아웃</Link>
+                                    <li className={styles.header_profile_dropdown_list} onClick={logout}>
+                                        로그아웃
                                     </li>
                                     <li className={styles.header_profile_dropdown_list}>
-                                        <Link to="/myPage">마이페이지</Link>
+                                        <Link to="/mypage">마이페이지</Link>
                                     </li>
                                 </ul> :
                                 <ul id={styles.header_profile_dropdown} className={styles.dropdown}>

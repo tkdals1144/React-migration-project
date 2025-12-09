@@ -50,13 +50,13 @@ function useSignupValidation() {
         }
 
         // 전화번호 유효성 검사 (010으로 시작하는 11자리 숫자)
-        if (!/^010\d{8}$/.test(data.phone)) {
+        if (!/^010\d{8}$/.test(data.phone_number)) {
             setValidationError("전화번호가 유효하지 않습니다. '- 없이 11자리를 입력해주세요.'");
             return false;
         }
 
         // 생년월일 유효성 검사
-        if (!checkValidDate(data.birth)) {
+        if (!checkValidDate(data.birth_date)) {
             setValidationError("생년월일이 유효하지 않거나 유효 범위(1925~2006)를 벗어났습니다.");
             return false;
         }
