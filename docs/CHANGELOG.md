@@ -66,3 +66,10 @@
 - 회원가입 정상동작을 Signup Custom Hook 최종변경
 - MainPage 단순 계산 로직 utils 폴더로 분리
 - MainPage banner UseRef와 UseEffect를 이용하여 제작
+
+-------------------------------------
+## 2025-12-09
+- MyPage 컴포넌트 기반 작성
+- MyPage 상세정보 fetch 를 위한 Custom Hook 제작
+- 기존의 Controller 외의 데이터만을 반환할 UserController 제작
+- UserController에 맞춘 UserDataDTO와 그에 맞는 값을 반환할 Repository의 function 제작
