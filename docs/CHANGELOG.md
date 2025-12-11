@@ -73,3 +73,10 @@
 - MyPage 상세정보 fetch 를 위한 Custom Hook 제작
 - 기존의 Controller 외의 데이터만을 반환할 UserController 제작
 - UserController에 맞춘 UserDataDTO와 그에 맞는 값을 반환할 Repository의 function 제작
+
+-------------------------------------
+## 2025-12-11
+- MyPage 버블링 오류 수정
+- Header 자동 로그아웃 오류 수정
+- AxiosError 500, Mapper/Repository 수정
+- MyPage css 추가 및 state에 따른 css 상태 변화 구현
