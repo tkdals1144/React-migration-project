@@ -29,7 +29,7 @@ public class UserRepository {
     }
 
     public UserDataDTO selectUserInfo2(String email) {
-        return session.selectOne(userNamespace + "selectUserInfo", email);
+        return session.selectOne(userNamespace + "selectUserInfo2", email);
     }
 
     public int updateUserInfo(UserUpdateDTO userUpdateDTO){

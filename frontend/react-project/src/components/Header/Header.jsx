@@ -55,8 +55,8 @@ function Header({ email, setEmail }) {
                         {openDropdown && 
                             (email ? 
                                 <ul id={styles.header_profile_dropdown2} className={styles.dropdown}>
-                                    <li className={styles.header_profile_dropdown_list} onClick={logout}>
-                                        로그아웃
+                                    <li className={styles.header_profile_dropdown_list}>
+                                        <p onClick={logout}>로그아웃</p>
                                     </li>
                                     <li className={styles.header_profile_dropdown_list}>
                                         <Link to="/mypage">마이페이지</Link>

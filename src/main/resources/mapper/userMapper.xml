@@ -18,6 +18,13 @@
         WHERE email = #{email}
     </select>
 
+    <select id="selectUserInfo2" resultType="UserDataDTO">
+        SELECT first_name AS firstName, last_name AS lastName, email,
+        phone_number AS phoneNumber, birth_date AS birthDate, join_date AS joinDate, pccc
+        FROM User
+        WHERE email = #{email}
+    </select>
+
     <update id="updateUserInfo" parameterType="UserUpdateDTO">
         <if test="pccc != null">
             UPDATE User
