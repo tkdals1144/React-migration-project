@@ -60,10 +60,22 @@ public class SignupService {
     }
 
     //유저 주소 등록
-    public  int registUserAddr(UserAddressDTO address, String email) {
-        int user_id = searchUserID(email);
-        address.setUser_id(String.valueOf(user_id));
-        return repository.registUserAddr(address);
+    public int registUserAddr(SignupRequestDTO user) {
+        List<UserAddressDTO> addressList = user.getAddresses();
+        if (addressList == null || addressList.isEmpty()) {
+            return 0;
+        }
+        int userId = searchUserID(user.getEmail());
+        if (userId == 0) {
+            throw new RuntimeException("회원가입 중 사용자 ID를 찾을 수 없습니다.");
+        }
+        int successCount = 0;
+        for (UserAddressDTO address : addressList) {
+            // 각 주소 DTO에 조회한 user_id 설정
+            address.setUser_id(String.valueOf(userId));
+            successCount += repository.registUserAddr(address);
+        }
+        return successCount;
     }
 
 }

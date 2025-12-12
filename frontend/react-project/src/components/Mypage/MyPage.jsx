@@ -4,7 +4,9 @@ import styles from './MyPage.module.css'
 import useInfo from './../../hooks/useInfo'
 
 function MyPage( {email} ) {
-    const { info, isLoading, error } = useInfo(email);
+    const { info, addresses, posts, isLoading, error } = useInfo(email);
+    // 주소값과 정보값은 변화시킬수 있으니 state 변수로 관리
+    const [myAddresses, setMyAddresses] = useState([]);
     const [user, setUser] = useState(info);
     const [active, setActive] = useState(0);
     const [modal, setModal] = useState(false);
@@ -12,6 +14,9 @@ function MyPage( {email} ) {
     useEffect(() => {
         if (info) setUser(info);
     }, [info]);
+    useEffect(() => {
+        if (addresses) setMyAddresses(addresses);
+    }, [addresses]);
 
     return (
         <>

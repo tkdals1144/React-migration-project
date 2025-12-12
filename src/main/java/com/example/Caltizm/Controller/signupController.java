@@ -1,6 +1,7 @@
 package com.example.Caltizm.Controller;
 
 import com.example.Caltizm.DTO.SignupRequestDTO;
+import com.example.Caltizm.DTO.UserAddressDTO;
 import com.example.Caltizm.Service.SignupService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -29,6 +30,7 @@ public class signupController {
         }
 
         service.registUser(user);
+        service.registUserAddr(user);
 
         return ResponseEntity.ok().body(new AuthResponse(true, "회원가입이 완료되었습니다."));
     }
