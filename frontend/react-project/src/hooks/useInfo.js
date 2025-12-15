@@ -28,21 +28,23 @@ function useInfo(email) {
 
             const apiCalls = [
                 // 1. 모든 정보 (axios.get() 호출 즉시 Promise 객체를 반환)
-                axios.get("/api/userInfo", {params : {email}}),
-                axios.get("/api/userAddress", {params : {email}}),
-                axios.get("/api/userPosts", {params : {email}}),
-            ]
-    
+                axios.get("/api/userInfo", { params: { email } }),
+                axios.get("/api/userAddress", { params: { email } }),
+                axios.get("/api/userPosts", { params: { email } }),
+            ];
+
             try {
                 // 2. Promise.all을 통해 모든 API 호출을 병렬로 처리
                 // 3. 컨트롤러에서 400, 404가 아닌 200 OK와 빈 배열을 반환하도록 했기에
                 // 4. Promise.all 에서 발생하는 오류는 전부 통신 문제로 간주
-                const [infoRes, addressesRes, postsRes] = await Promise.all(apiCalls);
+                const [infoRes, addressesRes, postsRes] = await Promise.all(
+                    apiCalls
+                );
 
                 console.log(infoRes.data);
                 console.log(addressesRes.data);
                 console.log(postsRes.data);
-    
+
                 setInfo(infoRes.data || null);
                 setAddresses(addressesRes.data || []);
                 setPosts(postsRes.data || []);
@@ -52,7 +54,7 @@ function useInfo(email) {
             } finally {
                 setIsLoading(false);
             }
-        }
+        };
 
         // const fetchInfo = async() => {
         //     // 현재 로딩중 + 에러는 없다!
@@ -78,8 +80,7 @@ function useInfo(email) {
 
         // fetchInfo();
         fetchAllInfo();
-
-    }, [email])
+    }, [email]);
     return { info, addresses, posts, isLoading, error };
 }
 
