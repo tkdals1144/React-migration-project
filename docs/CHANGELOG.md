@@ -80,3 +80,9 @@
 - Header 자동 로그아웃 오류 수정
 - AxiosError 500, Mapper/Repository 수정
 - MyPage css 추가 및 state에 따른 css 상태 변화 구현
+
+-------------------------------------
+## 2025-12-12
+- UserController에 주소 리스트와 작성글 리스트 매핑을 추가
+- Promise.all 을 통해 useInfo.js 에서 여러개의 axios.get 호출을 한번에 처리
+- 주소 등록을 위한 SignupService 및 SignupRequestDTO 수정
