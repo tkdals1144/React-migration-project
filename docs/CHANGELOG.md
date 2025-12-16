@@ -92,3 +92,11 @@
 - UseModal Custom Hook을 제작하여 주소값 수정 로직 추가
 - extension으로 prettier 추가 및 settings.json 전역 설정
 - myPage modal CRUD 설정 추가 완료 
+
+
+-------------------------------------
+## 2025-12-16
+- AddressList를 관리하기 위한 DTO 생성
+- AddressRepository와 AddressService를 생성
+- useAuth custom hook을 이용해 인증 구조 리팩터링
+- Mypage 주소 CRUD 일괄 동기화 구조 정립
