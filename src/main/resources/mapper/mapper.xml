@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<mapper namespace="com.example.Caltizm.Repository.AddressRepository">
+
+    <insert id="insert" parameterType="AddressRequestDTO2">
+        INSERT INTO address (
+        user_id,
+        address,
+        zip_code,
+        detail
+        )
+        VALUES (
+        #{userId},
+        #{address},
+        #{zipCode},
+        #{detail}
+        )
+    </insert>
+
+    <update id="update" parameterType="AddressRequestDTO2">
+        UPDATE address
+        SET
+        address = #{address},
+        zip_code = #{zipCode},
+        detail = #{detail}
+        WHERE address_id = #{addressId}
+    </update>
+
+    <!-- 주소 삭제 -->
+    <delete id="deleteById" parameterType="long">
+        DELETE FROM address
+        WHERE address_id = #{addressId}
+    </delete>
+
+    <select id="findByUserId"
+            parameterType="long"
+            resultType="com.example.Caltizm.DTO.AddressResponseDTO">
+        SELECT
+        address_id   AS addressId,
+        address,
+        zip_code     AS zipCode,
+        detail
+        FROM address
+        WHERE user_id = #{userId}
+        ORDER BY address_id ASC
+    </select>
+
+</mapper>

@@ -1,16 +1,16 @@
 package com.example.Caltizm.Controller;
 
-import com.example.Caltizm.DTO.AddressResponseDTO;
-import com.example.Caltizm.DTO.PostDTO;
-import com.example.Caltizm.DTO.UserDataDTO;
+import com.example.Caltizm.DTO.*;
 import com.example.Caltizm.Repository.BoardRepository;
 import com.example.Caltizm.Repository.UserRepository;
+import com.example.Caltizm.Service.AddressService;
+import com.sun.security.auth.UserPrincipal;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Collections;
 import java.util.List;
@@ -21,6 +21,7 @@ public class UserController {
 
     private final UserRepository userRepository;
     private final BoardRepository boardRepository;
+    private final AddressService addressService;
 
     @GetMapping("/userInfo")
     public ResponseEntity<UserDataDTO> getUserInfo(@RequestParam("email") String email) {
@@ -59,6 +60,22 @@ public class UserController {
         }
 
         return ResponseEntity.ok(postList);
+    }
+
+    @PutMapping("/addresses/sync")
+    public ResponseEntity<AddressListResponseDTO> syncAddressList(
+            @RequestBody AddressListRequestDTO request,
+            HttpSession session
+    ) {
+        Long userId = (Long) session.getAttribute("userId");
+
+        if (userId == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+        AddressListResponseDTO response =
+                addressService.syncAddresses(request, userId);
+
+        return ResponseEntity.ok(response);
     }
 }
 

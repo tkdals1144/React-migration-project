@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from 'axios';
+import axios from "axios";
 
-function useLogin(setUser) {
+function useLogin(refreshAuth) {
     const [error, setError] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
     const navigate = useNavigate();
@@ -13,12 +13,12 @@ function useLogin(setUser) {
 
         try {
             //1. 통신 로직과 await 비동기 처리
-            const res = await axios.post("/api/login", {email, password});
+            const res = await axios.post("/api/login", { email, password }, { withCredentials: true });
 
             // 2. 비즈니스 로직 및 상태 처리
             if (res.data.success) {
-                setUser(res.data.username);
-                navigate("/main");
+                await refreshAuth();
+                navigate("/main", { replace: true });
             } else {
                 setError(res.data.message || "로그인 실패");
                 console.log(error);

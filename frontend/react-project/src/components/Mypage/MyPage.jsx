@@ -23,6 +23,10 @@ function MyPage({ email }) {
         setDetailAddressRef, // Ref 등록 함수
     } = useModal(addresses); // useInfo에서 받아온 초기 주소 목록을 전달
 
+    useEffect(() => {
+        console.table(myAddresses2);
+    }, [myAddresses2]);
+
     // Daum Postcode API 팝업 상태 및 ID 관리
     const [isPostcodeOpen, setIsPostcodeOpen] = useState(false);
     const [targetAddressId, setTargetAddressId] = useState(null);
@@ -79,7 +83,7 @@ function MyPage({ email }) {
         if (addresses) setMyAddresses(addresses);
 
         // 확인용
-        console.table(myAddresses);
+        // console.table(myAddresses);
         // console.table(user);
     }, [addresses]);
 
@@ -95,7 +99,7 @@ function MyPage({ email }) {
                             </div>
                         </div>
                         <ul className={styles.modal_boxs}>
-                            {myAddresses.map((addr, idx) => (
+                            {myAddresses2.map((addr, idx) => (
                                 <li
                                     key={addr.addressId}
                                     className={styles.modal_box}

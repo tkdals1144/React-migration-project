@@ -1,15 +1,21 @@
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
-function useLogout(setEmail) {
+function useLogout(refreshAuth) {
     const navigate = useNavigate();
-    
-    const logout = () => {
-        console.log("logout called", {setEmail});
-        if (setEmail) setEmail(null);
-        navigate('/main');
-    }
 
-    return { logout }; 
+    const logout = async () => {
+        try {
+            await axios.get("/api/logout", { withCredentials: true });
+        } catch (err) {
+            console.error("로그아웃 요청 실패", err);
+        } finally {
+            await refreshAuth();
+            navigate("/main", { replace: true });
+        }
+    };
+
+    return { logout };
 }
 
 export default useLogout;
