@@ -22,7 +22,7 @@ function App() {
         <>
             {!hideLayout && <Header auth={auth} refreshAuth={refreshAuth} />}
             <Routes>
-                <Route path="/" element={<MainPage />} />
+                <Route path="/" element={<MainPage auth={auth} />} />
                 <Route path="/main" element={<Navigate to="/" replace />} />
                 <Route
                     path="/login"

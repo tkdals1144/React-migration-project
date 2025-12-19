@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.ErrorResponse;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collections;
@@ -67,9 +68,11 @@ public class UserController {
             @RequestBody AddressListRequestDTO request,
             HttpSession session
     ) {
-        Long userId = (Long) session.getAttribute("userId");
-
+        Integer id = (Integer) session.getAttribute("userId");
+        Long userId = id.longValue();
+        System.out.println("일단 들어옵니다");
         if (userId == null) {
+            System.out.println("유저 아이디 미확인");
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
         AddressListResponseDTO response =

@@ -64,13 +64,13 @@
     font-weight: bold;
 }
 
-.info_input, .info_input_readonly {
+.info_input,
+.info_input_readonly {
     padding: 16px 20px;
     font-size: 12px;
     font-weight: bold;
     width: 400px;
 }
-
 
 .info:nth-child(1) {
     border-top: 1px solid rgba(148, 147, 147, 0.4);
@@ -99,7 +99,8 @@
     background-color: rgba(190, 190, 190, 0.8);
 }
 
-#pwd_wrap, #pwd_check_wrap {
+#pwd_wrap,
+#pwd_check_wrap {
     width: 400px;
     display: flex;
     align-items: center;
@@ -110,8 +111,6 @@
     font-size: 12px;
     font-weight: bold;
 }
-
-
 
 .info2 {
     display: flex;
@@ -158,9 +157,6 @@
     border-right: 1px solid rgba(148, 147, 147, 0.4);
     border-bottom: 1px solid white;
 }
-
-
-
 
 .modal_wrap {
     display: flex;
@@ -265,4 +261,8 @@
 
 .modal_btn:hover {
     background-color: rgba(251, 186, 186, 1);
+}
+
+.info_li {
+    margin-top: 15px;
 }

@@ -33,13 +33,13 @@ const MAX_ADDRESSES = 3;
  * 마이페이지 주소 관리 모달을 위한 훅. (모달 닫기 시 일괄 동기화 방식)
  * @param {Array<Object>} initialMyAddresses - 서버에서 받은 사용자 주소 목록 (addressId 포함)
  */
-function useModal(initialMyAddresses = []) {
+function useModal(initialMyAddresses = [], modal) {
     useEffect(() => {
         if (initialMyAddresses && initialMyAddresses.length > 0) {
             setOriginalAddresses(initialMyAddresses);
             setMyAddresses2(initialMyAddresses);
         }
-    }, [initialMyAddresses]);
+    }, [initialMyAddresses, modal]);
     // 서버에서 받은 초기 데이터를 원본으로 보관
     const [originalAddresses, setOriginalAddresses] = useState(
         Array.isArray(initialMyAddresses) ? initialMyAddresses : []

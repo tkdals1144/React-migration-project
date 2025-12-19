@@ -5,8 +5,8 @@ import useInfo from "./../../hooks/useInfo";
 import useModal from "../../hooks/useModal";
 import useAddressSearch from "../../hooks/useAddressSearch";
 
-function MyPage({ email }) {
-    const { info, addresses, posts, isLoading, error } = useInfo(email);
+function MyPage({ auth }) {
+    const { info, addresses, posts, isLoading, error } = useInfo(auth?.email);
     // 주소값과 정보값은 변화시킬수 있으니 state 변수로 관리
     const [myAddresses, setMyAddresses] = useState([]);
     const [user, setUser] = useState(info);
@@ -21,10 +21,11 @@ function MyPage({ email }) {
         handleUpdateAddressLocally,
         handleSyncAddresses, // 모달 닫기 시 호출될 최종 동기화 함수
         setDetailAddressRef, // Ref 등록 함수
-    } = useModal(addresses); // useInfo에서 받아온 초기 주소 목록을 전달
+    } = useModal(addresses, modal); // useInfo에서 받아온 초기 주소 목록을 전달
 
     useEffect(() => {
         console.table(myAddresses2);
+        setMyAddresses(myAddresses2);
     }, [myAddresses2]);
 
     // Daum Postcode API 팝업 상태 및 ID 관리
@@ -78,6 +79,7 @@ function MyPage({ email }) {
 
     useEffect(() => {
         if (info) setUser(info);
+        console.log(info);
     }, [info]);
     useEffect(() => {
         if (addresses) setMyAddresses(addresses);
@@ -99,7 +101,7 @@ function MyPage({ email }) {
                             </div>
                         </div>
                         <ul className={styles.modal_boxs}>
-                            {myAddresses2.map((addr, idx) => (
+                            {myAddresses?.map((addr, idx) => (
                                 <li
                                     key={addr.addressId}
                                     className={styles.modal_box}
@@ -250,29 +252,23 @@ function MyPage({ email }) {
                                         주소록관리
                                     </button>
                                 </div>
-                                <ul
-                                    className={styles.info_wrap}
-                                    th:each="address : ${addressList}"
-                                    th:data-address-id="${address.addressId}"
-                                >
-                                    <li className={styles.info}>
-                                        <p>영문주소</p>
-                                        <p id={styles.eng_addr} th:text="${address.address}">
-                                            Geombae-ro, Guri-si, Gyeonggi-do, Republic of Korea
-                                        </p>
-                                    </li>
-                                    <li className={styles.info}>
-                                        <p>우편번호</p>
-                                        <p id={styles.postcode} th:text="${address.zipCode}">
-                                            0123456
-                                        </p>
-                                    </li>
-                                    <li className={styles.info}>
-                                        <p>상세주소</p>
-                                        <p id={styles.detailed} th:text="${address.detail}">
-                                            홍길시 홍길동 홍길로123 홍길아파트 홍길홍길
-                                        </p>
-                                    </li>
+                                <ul className={styles.info_wrap}>
+                                    {myAddresses.map((addr, idx) => (
+                                        <li className={idx === 0 ? styles.firstLi : styles.info_li}>
+                                            <div className={styles.info}>
+                                                <p>주소</p>
+                                                <p id={styles.eng_addr}>{addr.address}</p>
+                                            </div>
+                                            <div className={styles.info}>
+                                                <p>우편번호</p>
+                                                <p id={styles.postcode}>{addr.zipCode}</p>
+                                            </div>
+                                            <div className={styles.info}>
+                                                <p>상세주소</p>
+                                                <p id={styles.detailed}>{addr.detail}</p>
+                                            </div>
+                                        </li>
+                                    ))}
                                 </ul>
                             </div>
                         </div>
