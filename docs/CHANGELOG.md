@@ -100,3 +100,8 @@
 - AddressRepository와 AddressService를 생성
 - useAuth custom hook을 이용해 인증 구조 리팩터링
 - Mypage 주소 CRUD 일괄 동기화 구조 정립
+
+-------------------------------------
+## 2025-12-19
+- Optional Chaining을 통한 에러 가드 추가
+- 최초 모달이 열린 시점에만 주소 배열을 서버의 값으로 업데이트하여 mypage 주소 업데이트시 발생하는 일시적 상태 오류 해결
