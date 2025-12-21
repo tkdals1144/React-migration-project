@@ -105,3 +105,14 @@
 ## 2025-12-19
 - Optional Chaining을 통한 에러 가드 추가
 - 최초 모달이 열린 시점에만 주소 배열을 서버의 값으로 업데이트하여 mypage 주소 업데이트시 발생하는 일시적 상태 오류 해결
+
+-------------------------------------
+## 2025-12-19
+- Build.gradle 에 SpringSecurity 의존성 추가
+- PasswordEncoder를 추가하여 보안 수준 강화
+- localhost:5173 으로부터의 CORS 허용 전역 설정
+- 쿠키 전송을 위한 withCredentials: true 추가
+- 모든 전송에 쿠키를 포함시키기 위한 api.js 생성
+- SecurityConfig를 생성하여 들어오는 요청에 대한 권한 확인 작업 추가
+- 필터를 추가해 공통 api 요청을 알맞은 컨트롤러에 매칭
+- usePwdChange hook을 통한 비밀번호 변경 로직 추가
