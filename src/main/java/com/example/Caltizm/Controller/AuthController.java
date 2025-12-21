@@ -8,6 +8,7 @@ import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,6 +25,9 @@ public class AuthController {
 
     @Autowired
     CartRepository cartRepository;
+
+    @Autowired
+    PasswordEncoder passwordEncoder;
 
     public static class LoginResponse {
         private final boolean success;
@@ -49,7 +53,7 @@ public class AuthController {
         String password = loginRequestDTO.getPassword();
 
         LoginRequestDTO user = userRepository.selectUserLogin(email);
-        if (user == null || !password.equals(user.getPassword())) {
+        if (user == null || !passwordEncoder.matches(password, user.getPassword())) {
             System.out.println("이메일, 비밀번호 불일치");
             // 로그인 실패 시 JSON 응답 반환
             return ResponseEntity.ok(new LoginResponse(false, null, "이메일, 비밀번호 불일치"));

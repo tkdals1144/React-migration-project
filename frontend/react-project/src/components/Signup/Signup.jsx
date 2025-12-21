@@ -69,10 +69,14 @@ function Signup() {
         }
         console.log("??");
         try {
-            const res = await axios.post("/api/signup", {
-                ...data,
-                addresses,
-            });
+            const res = await axios.post(
+                "/api/signup",
+                {
+                    ...data,
+                    addresses,
+                },
+                { withCredentials: true }
+            );
             if (res.data.success) {
                 navigate("/main");
             } else {

@@ -3,7 +3,11 @@ package com.example.Caltizm.Controller;
 import com.example.Caltizm.DTO.*;
 import com.example.Caltizm.Repository.BoardRepository;
 import com.example.Caltizm.Repository.UserRepository;
+import jakarta.servlet.http.HttpSession;
+import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -17,6 +21,8 @@ public class MyPageController {
 
     @Autowired
     UserRepository userRepository;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @Autowired
     BoardRepository boardRepository;
@@ -241,62 +247,44 @@ public class MyPageController {
 
     @ResponseBody
     @PatchMapping("/changePassword")
-    public Map<String, String> changePassword(@SessionAttribute(value="email", required=false) String email,
-                                 @RequestBody PasswordFormDTO passwordFormDTO){
+    public ResponseEntity<?> changePassword(HttpSession session,
+                                         @RequestBody PasswordFormDTO passwordFormDTO){
 
-        Map<String, String> response = new HashMap<>();
-
-        if(email == null){
-            response.put("status", "session_invalid");
-            response.put("message", "세션이 유효하지 않습니다.");
-            System.out.println(response);
-            return response;
+        Integer userId = (Integer) session.getAttribute("userId");
+        String email = (String) session.getAttribute("email");
+        if (userId == null || email == null){
+            System.out.println("세션이 유효하지 않습니다.");
+            return ResponseEntity.status(401).build();
         }
 
         LoginRequestDTO user = userRepository.selectUserLogin(email);
-        if(user == null){
-            response.put("status", "user_invalid");
-            response.put("message", "사용자를 찾을 수 없습니다.");
-            System.out.println(response);
-            return response;
+        if (user == null) {
+            System.out.println("사용자를 찾을 수 없습니다");
+            return ResponseEntity.status(404).build();
         }
 
         String newPassword1 = passwordFormDTO.getNewPassword1();
         String newPassword2 = passwordFormDTO.getNewPassword2();
-
-        if(!newPassword1.equals(newPassword2)){
-            response.put("status", "password_mismatch");
-            response.put("message", "비밀번호 입력이 일치하지 않습니다.");
-            System.out.println(response);
-            return response;
+        if (!newPassword1.equals(newPassword2)){
+            System.out.println("비밀번호가 일치하지 않습니다");
+            return ResponseEntity.badRequest().body("비밀번호가 일치하지 않습니다");
         }
-
-        if(newPassword1.equals(user.getPassword())){
-            response.put("status", "password_same");
-            response.put("message", "기존 비밀번호와 동일합니다.");
-            System.out.println(response);
-            return response;
+        if (passwordEncoder.matches(newPassword1, user.getPassword())) {
+            System.out.println("기존 비밀번호와 동일합니다.");
+            return ResponseEntity.badRequest().body("비밀번호가 기존과 동일합니다");
         }
 
         PasswordUpdateDTO passwordUpdateDTO = new PasswordUpdateDTO();
         passwordUpdateDTO.setEmail(email);
-        passwordUpdateDTO.setNewPassword(newPassword1);
+        passwordUpdateDTO.setNewPassword(passwordEncoder.encode(newPassword1));
 
         int rRow = userRepository.updatePassword(passwordUpdateDTO);
-        System.out.println(rRow);
 
-        if(rRow != 1){
-            response.put("status", "update_fail");
-            response.put("message", "비밀번호 변경에 실패했습니다.");
-            System.out.println(response);
-            return response;
+        if(rRow != 1) {
+            System.out.println("비밀번호 변경에 실패했습니다.");
+            return ResponseEntity.badRequest().body("비밀번호 변경 실패");
         }
-
-        response.put("status", "update_success");
-        response.put("message", "비밀번호가 변경되었습니다.");
-        System.out.println(response);
-        return response;
+        return ResponseEntity.ok(Map.of("success", true));
 
     }
-
 }

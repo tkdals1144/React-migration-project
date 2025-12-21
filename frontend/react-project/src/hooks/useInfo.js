@@ -28,9 +28,9 @@ function useInfo(email) {
 
             const apiCalls = [
                 // 1. 모든 정보 (axios.get() 호출 즉시 Promise 객체를 반환)
-                axios.get("/api/userInfo", { params: { email } }),
-                axios.get("/api/userAddress", { params: { email } }),
-                axios.get("/api/userPosts", { params: { email } }),
+                axios.get("/api/userInfo", { params: { email }, withCredentials: true }),
+                axios.get("/api/userAddress", { params: { email }, withCredentials: true }),
+                axios.get("/api/userPosts", { params: { email }, withCredentials: true }),
             ];
 
             try {

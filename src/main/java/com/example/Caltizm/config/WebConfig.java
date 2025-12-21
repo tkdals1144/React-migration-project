@@ -26,7 +26,7 @@ public class WebConfig implements WebMvcConfigurer {
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**") // 모든 API 경로에 대해 CORS를 적용
                 .allowedOrigins("http://localhost:5173") // 👈 React 프론트엔드의 출처(포트)를 명시적으로 허용
-                .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS") // 허용할 HTTP 메서드
+                .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH") // 허용할 HTTP 메서드
                 .allowCredentials(true); // 👈 세션 쿠키(JSESSIONID)를 요청에 포함시켜 전송 허용 (세션 기반 인증에 필수)
     }
 }

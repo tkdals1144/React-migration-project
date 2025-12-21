@@ -4,6 +4,7 @@ import styles from "./MyPage.module.css";
 import useInfo from "./../../hooks/useInfo";
 import useModal from "../../hooks/useModal";
 import useAddressSearch from "../../hooks/useAddressSearch";
+import usePwdChange from "../../hooks/usePwdChange";
 
 function MyPage({ auth }) {
     const { info, addresses, posts, isLoading, error } = useInfo(auth?.email);
@@ -12,6 +13,8 @@ function MyPage({ auth }) {
     const [user, setUser] = useState(info);
     const [active, setActive] = useState(0);
     const [modal, setModal] = useState(false);
+    const [pwd, setPwd] = useState("");
+    const [pwdCheck, setPwdCheck] = useState("");
 
     const {
         myAddresses2,
@@ -22,7 +25,9 @@ function MyPage({ auth }) {
         handleSyncAddresses, // 모달 닫기 시 호출될 최종 동기화 함수
         setDetailAddressRef, // Ref 등록 함수
     } = useModal(addresses, modal); // useInfo에서 받아온 초기 주소 목록을 전달
+    const { isLoading2, changePwd } = usePwdChange();
 
+    // 주소값 테이블을 확인하고, 주소를 안전하게 저장하기 위한 로직
     useEffect(() => {
         console.table(myAddresses2);
         setMyAddresses(myAddresses2);
@@ -253,7 +258,7 @@ function MyPage({ auth }) {
                                     </button>
                                 </div>
                                 <ul className={styles.info_wrap}>
-                                    {myAddresses.map((addr, idx) => (
+                                    {myAddresses?.map((addr, idx) => (
                                         <li className={idx === 0 ? styles.firstLi : styles.info_li}>
                                             <div className={styles.info}>
                                                 <p>주소</p>
@@ -285,6 +290,10 @@ function MyPage({ auth }) {
                                                 name="newPassword1"
                                                 type="password"
                                                 placeholder="비밀번호입력"
+                                                value={pwd}
+                                                onChange={(e) => {
+                                                    setPwd(e.target.value);
+                                                }}
                                                 required
                                             />
                                         </div>
@@ -297,13 +306,23 @@ function MyPage({ auth }) {
                                                 name="newPassword2"
                                                 type="password"
                                                 placeholder="비밀번호입력 확인"
+                                                value={pwdCheck}
+                                                onChange={(e) => {
+                                                    setPwdCheck(e.target.value);
+                                                }}
                                                 required
                                             />
                                         </div>
                                     </li>
                                 </ul>
                                 <div id={styles.pwd_btn_wrap} className={styles.btn_wrap}>
-                                    <button id={styles.pwd_btn} className={styles.btn} type="submit">
+                                    <button
+                                        id={styles.pwd_btn}
+                                        className={styles.btn}
+                                        disabled={isLoading2}
+                                        onClick={() => changePwd({ pwd, pwdCheck })}
+                                        type="button"
+                                    >
                                         비밀번호변경
                                     </button>
                                 </div>
