@@ -71,6 +71,7 @@ public class UserController {
         Integer id = (Integer) session.getAttribute("userId");
         Long userId = id.longValue();
         System.out.println("일단 들어옵니다");
+        System.out.println(request);
         if (userId == null) {
             System.out.println("유저 아이디 미확인");
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();

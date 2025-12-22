@@ -18,6 +18,7 @@ public class AddressService {
             AddressListRequestDTO request,
             Long userId
     ) {
+        System.out.println(request.getDeleteIds());
 
         // 1. 삭제 처리
         if (request.getDeleteIds() != null) {

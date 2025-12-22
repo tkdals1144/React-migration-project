@@ -13,6 +13,6 @@ import java.util.List;
 public interface AddressRepository {
     void insert(AddressRequestDTO2 dto);
     void update(AddressRequestDTO2 dto);
-    int deleteById(Long addressId); // 🔥 이 줄 추가
+    void deleteById(Long addressId); // 🔥 이 줄 추가
     List<AddressResponseDTO> findByUserId(Long userId);
 }

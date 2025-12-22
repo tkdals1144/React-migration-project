@@ -120,7 +120,7 @@ function useModal(initialMyAddresses = [], modal) {
     const handleSyncAddresses = useCallback(async () => {
         const syncData = {
             addresses: myAddresses2,
-            deleted_ids: deletedAddressIds,
+            deleteIds: deletedAddressIds,
         };
 
         try {
@@ -131,6 +131,7 @@ function useModal(initialMyAddresses = [], modal) {
                 throw new Error("서버 동기화 실패");
             }
 
+            console.log(result.addresses);
             setOriginalAddresses(result.finalAddresses);
             setMyAddresses2(result.finalAddresses);
             setDeletedAddressIds([]);
