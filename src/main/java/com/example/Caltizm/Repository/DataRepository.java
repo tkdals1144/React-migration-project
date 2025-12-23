@@ -21,12 +21,17 @@ public class DataRepository {
     WishlistRepository wishlistRepository;
 
     public void collectAndInsertData() {
+        System.out.println("collectAndInsertData start");
         collectAndInsertBrandData();
+        System.out.println("collectAndInsertData loading");
         collectAndInsertProductData();
+        System.out.println("collectAndInsertData end");
     }
 
     public void collectAndInsertBrandData() {
         List<BrandDTO> brands = service.collectBrandInfo();
+        System.out.println("[Brand] collected size = "
+                + (brands == null ? "null" : brands.size()));
         // 안전 업데이트 모드 끄기
         session.update("brand.setSafeUpdateOff");
 

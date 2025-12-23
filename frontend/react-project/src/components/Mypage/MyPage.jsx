@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import styles from "./MyPage.module.css";
 import useInfo from "./../../hooks/useInfo";
@@ -67,6 +67,7 @@ function MyPage({ auth }) {
     // [D] 상세 주소 필드 값 변경 핸들러
     const handleDetailChange = (addrId, value) => {
         handleUpdateAddressLocally(addrId, { detail: value });
+        console.log(value);
     };
 
     // [E] '주소록 추가' 버튼 클릭 시
@@ -93,6 +94,8 @@ function MyPage({ auth }) {
         // console.table(myAddresses);
         // console.table(user);
     }, [addresses]);
+
+    const [localDetail, setLocalDetail] = useState([]);
 
     return (
         <>
@@ -127,14 +130,22 @@ function MyPage({ auth }) {
                                     <div className={styles.modal_box_items}>
                                         <p className={styles.modal_box_item}>{addr.address}</p>
                                         <p className={styles.modal_box_item}>우편번호 - {addr.zipCode}</p>
-                                        <input
-                                            className={styles.modal_box_item}
-                                            value={addr.detail || ""}
-                                            onChange={(e) => handleDetailChange(addr.addressId, e.target.value)}
-                                            ref={(el) => setDetailAddressRef(addr.addressId, el)}
-                                            onClick={(e) => e.stopPropagation()}
-                                        />
+                                        <p className={styles.modal_box_item}>{addr.detail || ""}</p>
                                     </div>
+                                    <input
+                                        className={styles.modal_box_item}
+                                        value={localDetail[idx]}
+                                        onClick={(e) => e.stopPropagation()}
+                                        onChange={(e) => {
+                                            handleDetailChange(addr.addressId, e.target.value);
+                                            setLocalDetail((prev) => {
+                                                const next = [...prev];
+                                                next[idx] = e.target.value;
+                                                return next;
+                                            });
+                                        }}
+                                        ref={(el) => setDetailAddressRef(addr.addressId, el)}
+                                    />
                                 </li>
                             ))}
                         </ul>

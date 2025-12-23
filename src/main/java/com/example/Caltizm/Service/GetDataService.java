@@ -94,7 +94,11 @@ public class GetDataService {
     //브랜드 정보 수집
     public static List<BrandDTO> collectBrandInfo() {
         Set<String> brandUrls = collectBrandURL();
+        for (String s : brandUrls) {
+            System.out.println(s);
+        }
         Set<BrandDTO> brands = ConcurrentHashMap.newKeySet();
+
         List<CompletableFuture<Void>> futureList = new ArrayList<>();
 
         for (String brandUrl : brandUrls) {
@@ -154,6 +158,8 @@ public class GetDataService {
                         for (int page = 1; page <= totalPages; page++) {
                             pageUrls.add(brandUrl + "?p=" + page);
                         }
+                    } else {
+                        System.out.println("진짜 null로 들어옴");
                     }
                 } catch (IOException e) {
                     System.out.println("Error fetching product page: " + brandUrl);
@@ -288,6 +294,7 @@ public class GetDataService {
             if (totalItemsElement == null) {
                 System.out.println("총 아이템 정보를 찾을 수 없습니다.");
                 totalPages = 0;
+                throw new IllegalArgumentException("아이템 정보가 null입니다.");
             }
 
             int totalItems = Integer.parseInt(totalItemsElement.text().replaceAll("[^0-9]", ""));
@@ -496,8 +503,8 @@ public class GetDataService {
 
     public static void main(String[] args) {
 //        GetDataService service = new GetDataService();
-//                Set<String> products =  collectFTAItemCode();
-//                System.out.println(products);
+//        Set<String> products =  collectFTAItemCode();
+//        System.out.println(products);
 //        List<String> bannerImages = service.collectBannerImage();
 //        System.out.println(bannerImages);
     }
