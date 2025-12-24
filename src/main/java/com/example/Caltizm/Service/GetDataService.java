@@ -36,10 +36,10 @@ import java.util.regex.Pattern;
 @Service
 public class GetDataService {
 
-    private static final String BASE_URL = "https://www.cultizm.com/kor/";
-    private static final String BRAND_URL1 = "https://www.cultizm.com/kor/clothing/";
-    private static final String BRAND_URL2 = "https://www.cultizm.com/kor/footwear/";
-    private static final String BRAND_URL3 = "https://www.cultizm.com/kor/accessories/";
+    private static final String BASE_URL = "https://cultizm.com/collections/";
+//    private static final String BRAND_URL1 = "https://cultizm.com/collections/footwear/";
+    private static final String BRAND_URL2 = "https://cultizm.com/collections/footwear/";
+    private static final String BRAND_URL3 = "https://cultizm.com/collections/accessories/";
     private static final String FTA_URL = "https://www.cultizm.com/kor/fta-items/";
     private static final int ITEMS_PER_PAGE = 36; // 페이지당 표시되는 상품 수
 
@@ -48,7 +48,7 @@ public class GetDataService {
 
     //브랜드 링크 수집
     public static Set<String> collectBrandURL() {
-        List<String> baseUrls = List.of(BRAND_URL1, BRAND_URL2, BRAND_URL3);
+        List<String> baseUrls = List.of(BRAND_URL2, BRAND_URL3);
         Set<String> brand = ConcurrentHashMap.newKeySet();
         List<CompletableFuture<Void>> futureList = new ArrayList<>();
         ExecutorService executor = Executors.newFixedThreadPool(5); // 동시에 최대 5개 작업
