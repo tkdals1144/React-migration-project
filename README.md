@@ -10,6 +10,7 @@
 - 마이페이지 주소 CRUD 일괄 처리 및 동기화
 - Custom Hook 기반 로직 분리로 React 스타일 적용
 - Axios + 세션 기반 통신 구조 구현
+- DB가 필요하지 않은 api Spring -> React 로 전환
 
 ---
 
@@ -32,11 +33,11 @@
 - 인증/세션: useAuth + Axios + HttpSession으로 로그인 상태 유지
 - MyPage 동기화: 주소 CRUD 및 장바구니 동기화 로직 최적화
 - 컴포넌트 구조: Custom Hook 기반 코드 재사용 및 결합도 최소화
-- 상태 관리: Props와 useState로 간단하게 관리 (Redux 등 불필요)
+- 상태 관리: Props와 useState로 간단하게 관리
 
 ---
 
-## 향후 개선 사항
+## 향후 개선 사항 (다음 프로젝트부터 활용 예정)
 - Redux 또는 Zustand 등 상태 관리 라이브러리 적용
 - JWT 기반 토큰 인증 전환
 - 테스트 코드 작성 (React Testing Library, JUnit)
